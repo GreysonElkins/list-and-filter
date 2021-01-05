@@ -10,6 +10,15 @@ const cleanRestaurantData = (restaurants: any | rawRestaurantData[]): restaurant
         })
 }
 
+const createErrorMessage = (error: number): string => {
+  switch(error) {
+    case 401:
+      return "We can't get restaurants right now. Try again later!"
+    default: 
+      return 'Something went wrong, try again later!'
+  }
+} 
+
 export const getRestaurants = (): Promise<any | rawRestaurantData[]> => {
   return fetch(
     `https://code-challenge.spectrumtoolbox.com/api/restaurants`, 
@@ -23,14 +32,16 @@ export const getRestaurants = (): Promise<any | rawRestaurantData[]> => {
       if(response.ok) {
         return response.json()
       } else {
-        return response.status
+        return response
       }
     })
     .then(restaurants => {
       if (Array.isArray(restaurants)) {
         return cleanRestaurantData(restaurants)
       } else {
-        return restaurants
+        return createErrorMessage(restaurants.status)
       }
     })
 }
+
+
