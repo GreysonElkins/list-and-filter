@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import SearchAndFilter from '../SearchAndFilter/SearchAndFilter.tsx'
 import { restaurant }from './definitions'
 import { getRestaurants } from './apiFunctions.tsx'
+import fakeData from './FakeData.tsx'
 
 import './RestaurantList.css'
 
@@ -13,17 +14,21 @@ const RestaurantList: React.FC = () => {
 
   useEffect(() => {
        if(isLoading) {
-        getRestaurants()
-          .then(restaurants => {
-            if (Array.isArray(restaurants)) {
-              setRestaurantList(restaurants)
-            } else {
-              setError(restaurants)
-            }
-          })
-          .then(() => {
-            setIsLoading(false)
-        })
+        // getRestaurants()
+        //   .then(restaurants => {
+        //     if (Array.isArray(restaurants)) {
+        //       setRestaurantList(restaurants)
+        //     } else {
+        //       setError(restaurants)
+        //     }
+        //   })
+        //   .then(() => {
+        //     setIsLoading(false)
+        // })
+
+        setRestaurantList(fakeData)
+        setIsLoading(false)
+
        }
   })
 
