@@ -1,6 +1,7 @@
 import { restaurant, rawRestaurantData } from './definitions'
 
 const cleanRestaurantData = (restaurants: any | rawRestaurantData[]): restaurant[] | string => {
+
   if (Array.isArray(restaurants)) {
     return restaurants.map((
       { id, name, city, state, telephone, tags, website, genre, attire }
@@ -25,10 +26,11 @@ export const getRestaurants = (): Promise<any | rawRestaurantData[]> => {
         }      
       })
         .then(response => {
-          if (response.ok) {
-            const restaurants = response.json()
-            return cleanRestaurantData(restaurants)
+            return response.json()
           }
+        )
+        .then(restaurants => {
+          return cleanRestaurantData(restaurants)
         })
   } catch (error) {
       return error.number
