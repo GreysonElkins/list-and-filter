@@ -1,6 +1,6 @@
 import { restaurant, rawRestaurantData } from './definitions'
 
-const cleanRestaurantData = (restaurants: any | rawRestaurantData[]): restaurant[] | string => {
+export const cleanRestaurantData = (restaurants: rawRestaurantData[]): restaurant[] => {
     return restaurants.map((
       { id, name, city, state, telephone, tags, website, genre, attire }
         ) => {
@@ -19,7 +19,7 @@ const createErrorMessage = (error: number): string => {
   }
 } 
 
-export const getRestaurants = (): Promise<any | rawRestaurantData[]> => {
+export const getRestaurants = (): Promise<string | restaurant[]> => {
   return fetch(
     `https://code-challenge.spectrumtoolbox.com/api/restaurants`, 
     {
