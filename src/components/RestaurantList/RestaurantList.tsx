@@ -71,7 +71,7 @@ const RestaurantList: React.FC = () => {
   const makePageNavigation = () => {
     return (
       <nav>
-        showing 10 out of {restaurantList.length} restaurants 
+        showing 10 out of {restaurantList.length} restaurants
         <button 
             disabled={pageNumber > 1 ? false : true}
             onClick={() => setPageNumber(pageNumber - 1)}
@@ -103,7 +103,13 @@ const RestaurantList: React.FC = () => {
   return (
     <>
       <div>{error}</div>
-      {restaurantList.length > 0 && makeRestaurantTable(pageNumber)}
+      {restaurantList.length > 0 && 
+        <>
+          {makeRestaurantTable(pageNumber)}
+          <SearchAndFilter>
+          </SearchAndFilter>
+        </>
+      }
     </>
   )
 }
