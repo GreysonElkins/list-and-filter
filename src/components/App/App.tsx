@@ -37,11 +37,9 @@ const App: React.FC = () => {
       <main> 
         <SearchAndFilter 
           data={restaurants} 
-          columns={['restaurant', 'city', 'state', 'telephone', 'genre', 'website']}
+          columns={['name', 'city', 'state', 'telephone', 'genre', 'website']}
           filterTypes={['state', 'genre']}
         />
-        {/* <List listItems={restaurants}> */}
-        {/* </List> */}
       </main>
     </div>
   );
