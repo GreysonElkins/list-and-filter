@@ -1,11 +1,33 @@
 import React, { useEffect, useState } from 'react'
 
-import './RestaurantList.css'
 
-const List: React.FC = () => {
-  // const [restaurantList, setRestaurantList] = useState<restaurant[]>([])   
-  // const [pageNumber, setPageNumber] = useState<number>(1)
+import { listProps } from './definitions'
+import { stringKeyOptions } from '../SearchAndFilter/definitions'
+// import './RestaurantList.css'
 
+const List: React.FC<listProps> = ({ listItems, columns }) => {
+  const [pageNumber, setPageNumber] = useState<number>(1)
+
+  const makeTableColumns = () => {
+    const htmlColumns = columns.map(column => <td>{column}</td>)
+    return (
+      <thead>
+        {htmlColumns}
+      </thead>
+    )
+  }
+
+  const makeDataRows = () => {
+    return listItems.reduce((rows: React.ReactNode[], item:stringKeyOptions): React.ReactNode[] => {
+      const row = columns.map(column => (
+        <td>{
+          Array.isArray(item[column]) ? item[column].join(',') : item[column] 
+        }</td>
+      ))
+      rows = rows.concat(<tr>{row}</tr>)
+      return rows
+    }, [])
+  }
 
   // const makeRestaurantTable = (page:number) => {
   //   const restaurantsToDisplay:restaurant[] = paginateRestaurantList(page)
@@ -29,16 +51,7 @@ const List: React.FC = () => {
 
   //   return (
   //     <>
-  //       <table>
-  //         <thead>
-  //           <td>Restaurant</td>
-  //           <td>City</td>
-  //           <td>State</td>
-  //           <td>Phone Number</td>
-  //           <td>Genres</td>
-  //         </thead>
   //         {listItems}
-  //       </table>
   //       {makePageNavigation()}
   //     </>
   //   )
@@ -79,7 +92,10 @@ const List: React.FC = () => {
 
   return (
     <>
-    Hello List
+    <table>
+      {makeTableColumns()}
+      {makeDataRows()}
+    </table>
       {/* <div>{error}</div>
       {restaurantList.length > 0 && 
         <>
