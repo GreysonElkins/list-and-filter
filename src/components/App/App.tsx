@@ -14,8 +14,6 @@ const App: React.FC = () => {
   const [error, setError] = useState<string>('')
 
   useEffect(() => {
-      // still need to sort restaurants, should be called in this block
-
       // getRestaurants()
       //   .then(restaurants => {
       //     if (Array.isArray(restaurants)) {

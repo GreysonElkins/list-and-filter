@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 
 import { listProps } from './definitions'
 import { stringKeyOptions } from '../SearchAndFilter/definitions'
-// import './RestaurantList.css'
 
 const List: React.FC<listProps> = ({ listItems, columns }) => {
   const [pageNumber, setPageNumber] = useState<number>(1)
@@ -21,14 +20,31 @@ const List: React.FC<listProps> = ({ listItems, columns }) => {
     )
   }
 
+  const examineCell = (cellInfo:any) => {
+    if (Array.isArray(cellInfo)) {
+      return cellInfo.join(', ')
+    } else if (cellInfo.includes('www.') || cellInfo.includes('https')) {
+      return <a href={cellInfo} title="Go to website"><span role="link">🌐</span></a>
+    } else if (typeof(cellInfo) === 'object') {
+      throw `This data is too complex to display: ${cellInfo}`
+    } else if (cellInfo === undefined) {
+      throw `Some data was undefined`
+    } else {
+      return cellInfo
+    }
+  }
+
   const makeDataRows = () => {
     const pageOfItems = paginateList()
     return pageOfItems.reduce((rows: React.ReactNode[], item:stringKeyOptions): React.ReactNode[] => {
-      const row = columns.map(column => (
-        <td>{
-          Array.isArray(item[column]) ? item[column].join(',') : item[column] 
-        }</td>
-      ))
+      const row = columns.map(column => {
+        try {
+          return <td>{examineCell(item[column])}</td>
+        } catch (e) {
+          console.error(e)
+          return <td>unknown</td>
+        }
+      })
       rows = rows.concat(<tr>{row}</tr>)
       return rows
     }, [])
