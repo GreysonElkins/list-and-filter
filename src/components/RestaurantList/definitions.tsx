@@ -23,6 +23,6 @@ export type restaurant = {
   telephone: string;
   tags: string;
   website: string;
-  genre: string;
+  genre: Array<string>;
   attire: string;
 }

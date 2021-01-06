@@ -1,11 +1,11 @@
-import { restaurant, rawRestaurantData } from './definitions'
+import { rawRestaurantData, restaurant } from './definitions'
 
 export const cleanRestaurantData = (restaurants: rawRestaurantData[]): restaurant[] => {
   const cleanedData = restaurants.map((
     { id, name, city, state, telephone, tags, website, genre, attire }
       ) => {
         return {
-            id, name, city, state, telephone, tags, website, genre, attire
+            id, name, city, state, telephone, tags, website, genre: genre.split(','), attire
         } 
       })
   return alphabetizeRestaurantByName(cleanedData)
