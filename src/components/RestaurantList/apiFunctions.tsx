@@ -1,13 +1,26 @@
 import { restaurant, rawRestaurantData } from './definitions'
 
 export const cleanRestaurantData = (restaurants: rawRestaurantData[]): restaurant[] => {
-    return restaurants.map((
-      { id, name, city, state, telephone, tags, website, genre, attire }
-        ) => {
-          return {
-             id, name, city, state, telephone, tags, website, genre, attire
-          } 
-        })
+  const cleanedData = restaurants.map((
+    { id, name, city, state, telephone, tags, website, genre, attire }
+      ) => {
+        return {
+            id, name, city, state, telephone, tags, website, genre, attire
+        } 
+      })
+  return alphabetizeRestaurantByName(cleanedData)
+}
+
+const alphabetizeRestaurantByName = (restaurants: restaurant[]): restaurant[] => {
+  return restaurants.sort((a, b) => {
+    
+    let nameA = a.name
+    let nameB = b.name
+    if (a.name.slice(0, 4) === 'The ') nameA = nameA.substring(4)
+    if (b.name.slice(0, 4) === 'The ') nameB = nameB.substring(4)
+
+    return nameA.localeCompare(nameB)
+  })
 }
 
 const createErrorMessage = (error: number): string => {
@@ -15,7 +28,7 @@ const createErrorMessage = (error: number): string => {
     case 401:
       return "We can't get restaurants right now. Try again later!"
     default: 
-      return 'Something went wrong, try again later!'
+      return 'Something went wrong, try again later!'['']
   }
 } 
 
