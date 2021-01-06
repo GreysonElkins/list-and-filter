@@ -38,7 +38,7 @@ export const getRestaurants = (): Promise<string | restaurant[]> => {
     {
       method: 'GET',
       headers: {
-        "Authorization": "Api-Key q3MNxtfep8Gt"
+        "Authorization": ""
       }      
     })
     .then(response => {
