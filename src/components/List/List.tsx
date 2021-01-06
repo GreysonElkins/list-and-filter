@@ -18,7 +18,8 @@ const List: React.FC<listProps> = ({ listItems, columns }) => {
   }
 
   const makeDataRows = () => {
-    return listItems.reduce((rows: React.ReactNode[], item:stringKeyOptions): React.ReactNode[] => {
+    const pageOfItems = paginateList()
+    return pageOfItems.reduce((rows: React.ReactNode[], item:stringKeyOptions): React.ReactNode[] => {
       const row = columns.map(column => (
         <td>{
           Array.isArray(item[column]) ? item[column].join(',') : item[column] 
@@ -79,16 +80,16 @@ const List: React.FC<listProps> = ({ listItems, columns }) => {
   //   )
   // }
 
-  // const paginateRestaurantList = (page:number): restaurant[] => {
-  //   const listRange = [(page - 1) * 10, page * 10 - 1]
-  //   let listItems = []
+  const paginateList = (): object[] => {
+    const listRange = [(pageNumber - 1) * 10, pageNumber * 10 - 1]
+    let pageOfItems = []
     
-  //   for (let i = listRange[0]; i < listRange[1]; i++) {
-  //     if (restaurantList[i]) listItems.push(restaurantList[i])
-  //   }
+    for (let i = listRange[0]; i <= listRange[1]; i++) {
+      if (listItems[i]) pageOfItems.push(listItems[i])
+    }
 
-  //   return listItems
-  // }
+    return pageOfItems
+  }
 
   return (
     <>
