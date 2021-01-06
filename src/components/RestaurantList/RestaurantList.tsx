@@ -41,7 +41,7 @@ const RestaurantList: React.FC = () => {
           <td>{city}</td>
           <td>{state}</td>
           <td>{telephone}</td>
-          <td>{genre}</td>
+          <td>{genre.join(', ')}</td>
           <td>
             <a href={website} title={`${name}'s website`}>
               🌐
@@ -71,20 +71,21 @@ const RestaurantList: React.FC = () => {
   const makePageNavigation = () => {
     return (
       <nav>
-        showing 10 out of {restaurantList.length} restaurants
         <button 
             disabled={pageNumber > 1 ? false : true}
             onClick={() => setPageNumber(pageNumber - 1)}
-          >
+            >
             previous
           </button>
             {pageNumber}
           <button
             disabled={paginateRestaurantList(pageNumber + 1).length === 0 ? true : false}
             onClick={() => setPageNumber(pageNumber + 1)}
-          >
+            >
             next
           </button>
+          <br />
+          showing 10 out of {restaurantList.length} restaurants
       </nav>
     )
   }
