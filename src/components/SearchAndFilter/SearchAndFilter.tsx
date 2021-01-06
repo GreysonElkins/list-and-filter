@@ -14,6 +14,7 @@ const reduceSelectedFilters = (state: object, filterUpdate:filterUpdate) => {
 
 const SearchAndFilter: React.FC<filterProps> = ({data, columns, filterTypes}) => {
   const [selectedFilters, dispatch] = useReducer(reduceSelectedFilters, {})
+  const [searchField, setSearchField] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
@@ -32,25 +33,6 @@ const SearchAndFilter: React.FC<filterProps> = ({data, columns, filterTypes}) =>
     }
     setIsLoading(false)
   }, [data, filterTypes, isLoading])
-  
-  // const buildOneFilter = (filter) => {
-  //   const filterMenu = data.reduce((options:Array<string | number | boolean>, item) => {
-  //       try {
-  //         if (Array.isArray(item[filter])) {
-  //           return options.concat(item[filter])
-  //         } else if (typeof item[filter] === 'object') {
-  //           throw `Some of the filter options for ${filter} were ignored because the data was too complex`
-  //         } else {
-  //           return options.push(item[filter])
-  //         }
-  //       } catch (e) {
-  //         console.error(e)
-  //       }
-  //       return options
-  //     }, [<label htmlFor={`${filter}-dropdown`}>{filter}</label>])
-  //   }
-
-  // }
 
   const determineAvailableValues = (filter: string) => {
     const allOptions = data.reduce((options:(string | number | boolean)[], item:keyOptions): (string | number | boolean)[] => {
@@ -75,15 +57,18 @@ const SearchAndFilter: React.FC<filterProps> = ({data, columns, filterTypes}) =>
     const availableOptions = determineAvailableValues(filter)
     const options = availableOptions.map((option, i) => {
         if(availableOptions.indexOf(option) === i) {
-          return <option>{option}</option>
+          return <option value={option.toString()}>{option}</option>
         }
       })
 
     return (
       <>
       <label htmlFor={`${filter}-selector`}>{filter}</label>
-      <select>
-        <option>All</option>
+      <select 
+        id={`${filter}-selector`} 
+        onChange={(event) => dispatch({type: filter, value: event.target.value})}
+      >
+        <option value="">All</option>
         {options}
       </select>
       </>
@@ -92,10 +77,10 @@ const SearchAndFilter: React.FC<filterProps> = ({data, columns, filterTypes}) =>
 
   return (
     <div>
-      <form>
-        <input type="textbox" placeholder="search" />
+      <form onSubmit={(event) => event.preventDefault()}>
+        <input id='search-box' type="textbox" placeholder="search" onChange={(event) => {setSearchField(event.target.value)}}/>
         <button type="submit">search</button>
-        <button>clear</button>
+        <button type="reset" onClick={() => setSearchField('')}>clear</button>
       </form>
       {filterTypes &&
         filterTypes.map(filter => createFilterOptions(filter))
