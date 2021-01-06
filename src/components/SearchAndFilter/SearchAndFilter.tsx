@@ -40,11 +40,11 @@ const SearchAndFilter: React.FC<filterProps> = ({data, columns, filterTypes}) =>
   
   
   const filterData = useCallback((matchingItems:object[]) => {
-    let result:object[] = []
+    let result:object[] = matchingItems
     if (filterTypes) {
       filterTypes.forEach(filter => {
         if (selectedFilters[filter] !== 'All' && filter !== 'search') {
-          result = matchingItems.filter((item:stringKeyOptions) => item[filter].includes(selectedFilters[filter]))
+          result = result.filter((item:stringKeyOptions) => item[filter].includes(selectedFilters[filter]))
         } 
       })
     }
