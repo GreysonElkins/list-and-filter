@@ -1,10 +1,10 @@
 // import logo from './logo.svg';
 import React, { useEffect, useState } from 'react'
 
-import SearchAndFilter from '../SearchAndFilter/SearchAndFilter.tsx'
+import SearchAndFilter from '../SearchAndFilter/SearchAndFilter'
 import { restaurant }from './definitions'
-import { getRestaurants } from './apiFunctions.tsx'
-import fakeData from './FakeData.tsx'
+import { getRestaurants } from './apiFunctions'
+import fakeData from './FakeData'
 
 import './App.css';
 
