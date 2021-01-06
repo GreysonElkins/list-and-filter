@@ -9,6 +9,6 @@ export type filterUpdate = {
   value?: string
 }
 
-export type keyOptions = {
+export type stringKeyOptions = {
   [key: string]: any
 }

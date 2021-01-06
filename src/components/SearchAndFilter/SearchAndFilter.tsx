@@ -1,7 +1,8 @@
 /* eslint-disable no-throw-literal */
-import React, { useReducer, useState, useEffect } from 'react'
+import React, { useReducer, useState, useEffect, useCallback } from 'react'
 
-import { filterProps, filterUpdate, keyOptions } from './definitions'
+import List from '../List/List'
+import { filterProps, filterUpdate, stringKeyOptions } from './definitions'
 
 import './SearchAndFilter.css'
 
@@ -13,7 +14,8 @@ const reduceSelectedFilters = (state: object, filterUpdate:filterUpdate) => {
 }
 
 const SearchAndFilter: React.FC<filterProps> = ({data, columns, filterTypes}) => {
-  const [selectedFilters, dispatch] = useReducer(reduceSelectedFilters, {})
+  const [selectedFilters, dispatch] = useReducer(reduceSelectedFilters, {search: ''})
+  const [limitedListSelection, setLimitedListSelection] = useState<Array<object>>([])
   const [searchField, setSearchField] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
@@ -21,7 +23,9 @@ const SearchAndFilter: React.FC<filterProps> = ({data, columns, filterTypes}) =>
     if(filterTypes) {
       filterTypes.forEach(filterName => {
         try {
-          if (data.every(piece => Object.keys(piece).includes(filterName))) {
+          if (filterName === 'search') {
+            throw "Search is not an allowed filter because it's already used."
+          } else if (data.every(piece => Object.keys(piece).includes(filterName))) {
             dispatch({type: filterName})
           } else {
             throw `Some or all of the data is missing the key "${filterName}"`
@@ -33,17 +37,41 @@ const SearchAndFilter: React.FC<filterProps> = ({data, columns, filterTypes}) =>
     }
     setIsLoading(false)
   }, [data, filterTypes, isLoading])
+  
+  
+  const filterData = useCallback((matchingItems:object[]) => {
+    let result:object[] = []
+    if (filterTypes) {
+      filterTypes.forEach(filter => {
+        if (selectedFilters[filter] !== 'All' && filter !== 'search') {
+          result = matchingItems.filter((item:stringKeyOptions) => item[filter].includes(selectedFilters[filter]))
+        } 
+      })
+    }
+    return result 
+  }, [filterTypes, selectedFilters])
+  
+  const limitSelection = useCallback(() => {
+    let matchingItems:object[] = data
+    matchingItems = filterData(matchingItems)
+    setLimitedListSelection(matchingItems)
+  }, [data, filterData])
 
-  const determineAvailableValues = (filter: string) => {
-    const allOptions = data.reduce((options:(string | number | boolean)[], item:keyOptions): (string | number | boolean)[] => {
+  useEffect(() => {
+    limitSelection()
+    console.log('run')
+  }, [limitSelection, selectedFilters])
 
+
+  const determineAvailableValues = (filterType: string) => {
+    const allOptions = data.reduce((options:(string | number | boolean)[], item:stringKeyOptions): (string | number | boolean)[] => {
       try {
-        if (Array.isArray(item[filter])) {
-          options = options.concat(item[filter])
-        } else if (typeof item[filter] === 'object') {
-          throw `Some of the filter options for ${filter} were ignored because the data was too complex`
+        if (Array.isArray(item[filterType])) {
+          options = options.concat(item[filterType])
+        } else if (typeof item[filterType] === 'object') {
+          throw `Some of the filter options for ${filterType} were ignored because the data was too complex`
         } else {
-          options.push(item[filter])
+          options.push(item[filterType])
         }
       } catch (e) {
         console.error(e)
@@ -53,8 +81,8 @@ const SearchAndFilter: React.FC<filterProps> = ({data, columns, filterTypes}) =>
     return allOptions.sort()
   }
 
-  const createFilterOptions = (filter: string) => {
-    const availableOptions = determineAvailableValues(filter)
+  const createFilterOptions = (filterType: string) => {
+    const availableOptions = determineAvailableValues(filterType)
     const options = availableOptions.map((option, i) => {
         if(availableOptions.indexOf(option) === i) {
           return <option value={option.toString()}>{option}</option>
@@ -63,16 +91,24 @@ const SearchAndFilter: React.FC<filterProps> = ({data, columns, filterTypes}) =>
 
     return (
       <>
-      <label htmlFor={`${filter}-selector`}>{filter}</label>
+      <label htmlFor={`${filterType}-selector`}>{filterType}</label>
       <select 
-        id={`${filter}-selector`} 
-        onChange={(event) => dispatch({type: filter, value: event.target.value})}
+        id={`${filterType}-selector`} 
+        onChange={(event) => dispatch({type: filterType, value: event.target.value})}
       >
         <option value="">All</option>
         {options}
       </select>
       </>
     )
+  }
+
+  const determineListItems = () => {
+    if (limitedListSelection.length > 0) {
+      return <List listItems={limitedListSelection} columns={columns}/>
+    } else {
+      return <List listItems={data} columns={columns}/>
+    }
   }
 
   return (
