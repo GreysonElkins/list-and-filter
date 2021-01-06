@@ -121,6 +121,7 @@ const SearchAndFilter: React.FC<filterProps> = ({data, columns, filterTypes}) =>
       {filterTypes &&
         filterTypes.map(filter => createFilterOptions(filter))
       }
+      {determineListItems()}
     </div>
   )
 }
