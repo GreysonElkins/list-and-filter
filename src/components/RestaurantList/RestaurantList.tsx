@@ -14,8 +14,6 @@ const RestaurantList: React.FC = () => {
   const [pageNumber, setPageNumber] = useState<number>(1)
 
   useEffect(() => {
-       if(isLoading) {
-
         // still need to sort restaurants, should be called in this block
 
         // getRestaurants()
@@ -29,15 +27,12 @@ const RestaurantList: React.FC = () => {
         //   .then(() => {
         //     setIsLoading(false)
         // })
-
         setRestaurantList(fakeData)
         setIsLoading(false)
+  }, [isLoading])
 
-       }
-  })
-
-  const makeRestaurantTable = () => {
-    const restaurantsToDisplay = paginateRestaurantList()
+  const makeRestaurantTable = (page:number) => {
+    const restaurantsToDisplay:restaurant[] = paginateRestaurantList(page)
 
     const listItems = restaurantsToDisplay.map(({ name, city, state, telephone, genre, website }) => {
       return (
@@ -48,7 +43,7 @@ const RestaurantList: React.FC = () => {
           <td>{telephone}</td>
           <td>{genre}</td>
           <td>
-            <a href={website} alt={`${name}'s website`}>
+            <a href={website} title={`${name}'s website`}>
               🌐
             </a>
           </td>
@@ -68,29 +63,38 @@ const RestaurantList: React.FC = () => {
           </thead>
           {listItems}
         </table>
-        <button 
-          disabled={pageNumber > 1 ? false : true}
-          onClick={() => setPageNumber(pageNumber - 1)}
-        >
-          previous
-        </button>
-          {pageNumber}
-        <button
-          // disabled={}
-          onClick={() => setPageNumber(pageNumber + 1)}
-        >
-          next
-        </button>
+        {makePageNavigation()}
       </>
     )
   }
 
-  const paginateRestaurantList = () => {
-    const listRange = [(pageNumber - 1) * 10, pageNumber * 10 - 1]
+  const makePageNavigation = () => {
+    return (
+      <nav>
+        showing 10 out of {restaurantList.length} restaurants 
+        <button 
+            disabled={pageNumber > 1 ? false : true}
+            onClick={() => setPageNumber(pageNumber - 1)}
+          >
+            previous
+          </button>
+            {pageNumber}
+          <button
+            disabled={paginateRestaurantList(pageNumber + 1).length === 0 ? true : false}
+            onClick={() => setPageNumber(pageNumber + 1)}
+          >
+            next
+          </button>
+      </nav>
+    )
+  }
+
+  const paginateRestaurantList = (page:number): restaurant[] => {
+    const listRange = [(page - 1) * 10, page * 10 - 1]
     let listItems = []
     
     for (let i = listRange[0]; i < listRange[1]; i++) {
-      listItems.push(restaurantList[i])
+      if (restaurantList[i]) listItems.push(restaurantList[i])
     }
 
     return listItems
@@ -99,9 +103,7 @@ const RestaurantList: React.FC = () => {
   return (
     <>
       <div>{error}</div>
-      <SearchAndFilter>
-      </SearchAndFilter>
-      {restaurantList.length > 0 && makeRestaurantTable()}
+      {restaurantList.length > 0 && makeRestaurantTable(pageNumber)}
     </>
   )
 }
