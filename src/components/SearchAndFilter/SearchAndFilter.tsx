@@ -5,7 +5,6 @@ import './SearchAndFilter.css'
 const SearchAndFilter: React.FC = () => {
   return (
     <div>
-      hello search
     </div>
   )
 }
