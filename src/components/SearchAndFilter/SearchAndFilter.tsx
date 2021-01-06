@@ -15,7 +15,7 @@ const reduceSelectedFilters = (state: object, filterUpdate:filterUpdate) => {
 
 const SearchAndFilter: React.FC<filterProps> = ({data, columns, filterTypes}) => {
   const [selectedFilters, dispatch] = useReducer(reduceSelectedFilters, {search: ''})
-  const [limitedListSelection, setLimitedListSelection] = useState<Array<object>>([])
+  const [filteredData, setFilteredData] = useState<Array<object>>([])
   const [searchField, setSearchField] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
@@ -54,7 +54,7 @@ const SearchAndFilter: React.FC<filterProps> = ({data, columns, filterTypes}) =>
   const limitSelection = useCallback(() => {
     let matchingItems:object[] = data
     matchingItems = filterData(matchingItems)
-    setLimitedListSelection(matchingItems)
+    setFilteredData(matchingItems)
   }, [data, filterData])
 
   useEffect(() => {
@@ -102,10 +102,25 @@ const SearchAndFilter: React.FC<filterProps> = ({data, columns, filterTypes}) =>
       </>
     )
   }
+  
+  const findFiltersWithoutResults = ():boolean => {
+    const someFiltersArentDefault = () => {
+      return Object.keys(selectedFilters)
+        .some(filter => selectedFilters[filter] !== 'All' || selectedFilters[filter] !== '')
+    }
+
+   if (someFiltersArentDefault() && filteredData.length === 0) {
+     return true
+   } else {
+     return false
+   }
+  }
 
   const determineListItems = () => {
-    if (limitedListSelection.length > 0) {
-      return <List listItems={limitedListSelection} columns={columns}/>
+    if (filteredData.length > 0) {
+      return <List listItems={filteredData} columns={columns}/>
+    } else if (findFiltersWithoutResults()) {
+      return <h3>We couldn't find any matching results</h3>
     } else {
       return <List listItems={data} columns={columns}/>
     }
