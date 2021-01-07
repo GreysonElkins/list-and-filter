@@ -28,7 +28,7 @@ const createErrorMessage = (error: number): string => {
     case 401:
       return "We can't get restaurants right now. Try again later!"
     default: 
-      return 'Something went wrong, try again later!'['']
+      return 'Something went wrong, try again later!'
   }
 } 
 

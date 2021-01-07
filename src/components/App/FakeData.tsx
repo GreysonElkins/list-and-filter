@@ -1,4 +1,4 @@
-import { cleanRestaurantData } from './apiFunctions.tsx'
+import { cleanRestaurantData } from './apiFunctions'
 
 const fakeData = [
     {
