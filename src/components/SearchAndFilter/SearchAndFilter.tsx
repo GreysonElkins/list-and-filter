@@ -104,6 +104,7 @@ const SearchAndFilter: React.FC<filterProps> = ({data, columns, filterTypes}) =>
       <select 
         id={`${filterType}-selector`} 
         onChange={(event) => dispatch({type: filterType, value: event.target.value})}
+        value={selectedFilters[filterType]}
       >
         <option value="">All</option>
         {options}
@@ -140,6 +141,12 @@ const SearchAndFilter: React.FC<filterProps> = ({data, columns, filterTypes}) =>
     }
   }
 
+  const clearFilters = () => {
+    if(filterTypes) {
+      filterTypes.forEach(filter => dispatch({type: filter}))
+    }
+  }
+
   return (
     <div>
       <form 
@@ -161,7 +168,10 @@ const SearchAndFilter: React.FC<filterProps> = ({data, columns, filterTypes}) =>
         </button>
       </form>
       {filterTypes &&
-        filterTypes.map(filter => createFilterOptions(filter))
+        <>
+          {filterTypes.map(filter => createFilterOptions(filter))}
+          <button onClick={clearFilters}>Reset</button>
+        </>
       }
       {determineListItems()}
     </div>
