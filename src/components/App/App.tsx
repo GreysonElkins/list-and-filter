@@ -38,6 +38,9 @@ const App: React.FC = () => {
           columns={['name', 'city', 'state', 'telephone', 'genre', 'website']}
           filterTypes={['state', 'genre']}
         />
+        {isLoading &&
+          <img src="/loading.gif" alt="loading icon" />
+        }
       </main>
     </div>
   );
