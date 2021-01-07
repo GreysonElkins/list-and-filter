@@ -23,7 +23,7 @@ const List: React.FC<listProps> = ({ listItems, columns }) => {
   const examineCell = (cellInfo:any) => {
     if (Array.isArray(cellInfo)) {
       return cellInfo.join(', ')
-    } else if (cellInfo.includes('www.') || cellInfo.includes('https')) {
+    } else if (cellInfo.includes('www.') || cellInfo.includes('http')) {
       return <a href={cellInfo} title="Go to website"><span role="link">🌐</span></a>
     } else if (typeof(cellInfo) === 'object') {
       throw `This data is too complex to display: ${cellInfo}`

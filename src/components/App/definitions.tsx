@@ -21,7 +21,7 @@ export type restaurant = {
   city: string;
   state: string;
   telephone: string;
-  tags: string;
+  tags: Array<string>;
   website: string;
   genre: Array<string>;
   attire: string;
