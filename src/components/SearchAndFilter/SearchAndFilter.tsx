@@ -103,7 +103,10 @@ const SearchAndFilter: React.FC<filterProps> = ({data, columns, filterTypes}) =>
       <label htmlFor={`${filterType}-selector`}>{filterType}</label>
       <select 
         id={`${filterType}-selector`} 
-        onChange={(event) => dispatch({type: filterType, value: event.target.value})}
+        onChange={(event) => {
+          searchData()
+          dispatch({type: filterType, value: event.target.value})
+        }}
         value={selectedFilters[filterType]}
       >
         <option value="">All</option>
