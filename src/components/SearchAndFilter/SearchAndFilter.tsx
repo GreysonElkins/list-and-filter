@@ -15,8 +15,9 @@ const reduceSelectedFilters = (state: object, filterUpdate:filterUpdate) => {
 
 const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes}) => {
   const [selectedFilters, dispatch] = useReducer(reduceSelectedFilters, {})
+  const [filteredDataResults, setFilteredDataResults] = useState<Array<object>>([])
   const [searchField, setSearchField] = useState<string>('')
-  const [filteredData, setFilteredData] = useState<Array<object>>([])
+  const [searchedDataResults, setSearchedDataResults] = useState<Array<string>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
   const makeFilterControlledState = useCallback(() => {
@@ -64,7 +65,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
   }
 
   const filterData = useCallback(() => {
-    let result:object[] = filteredData.length > 0 ? filteredData : allData
+    let result:object[] = filteredDataResults.length > 0 ? filteredDataResults : allData
 
     const someFilterIsSelected = ():boolean => {
       return Object.values(selectedFilters).some(filter => filter !== 'All')
@@ -77,20 +78,32 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
         } 
       })
     }
-    setFilteredData(result)
-  }, [allData, filterTypes, filteredData, selectedFilters])
+    setFilteredDataResults(result)
+  }, [allData, filterTypes, filteredDataResults, selectedFilters])
 
+  const cleanDataForSearch = (item: object):any[] => {
+    Object.values(item).reduce((values, value) => {
+      if (Array.isArray(value)) {
+        return values.concat(value)
+      } else {
+        return value.push(value)
+      }
+    }, [])
+  }
 
   const searchData = () => {
-    let result: object[] = filteredData.length > 0 ? filteredData : allData
+    let result:any[] = [];
+    
     if (searchField !== '') {
-      result = result.filter(item => {
-        let itemsValues:any[] = [].concat(...Object.values(item))
+      result = allData.map(item => {
+        let itemsValues:any[] = cleanDataForSearch(item)
         itemsValues = itemsValues.map(value => `${value}`.toUpperCase())
-        return itemsValues.some(value => value.includes(searchField.toUpperCase()))
+
+        if (itemsValues.some(value => value.includes(searchField.toUpperCase()))) return item.id
         }
       )}
-    setFilteredData(result)
+
+    setFilteredDataResults(result)
   } 
 
   const determineAvailableFilterValues = (filterType: string) => {
@@ -117,7 +130,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
         .some(filter => selectedFilters[filter] !== 'All')
     }
 
-   if (someFiltersArentDefault() && filteredData.length === 0) {
+   if (someFiltersArentDefault() && filteredDataResults.length === 0) {
      return true
    } else {
      return false
@@ -125,8 +138,8 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
   }
 
   const determineListItems = () => {
-    if (filteredData.length > 0) {
-      return <List listItems={filteredData} columns={columns}/>
+    if (filteredDataResults.length > 0) {
+      return <List listItems={filteredDataResults} columns={columns}/>
     } else if (findFiltersWithoutResults()) {
       return (
         <> 
@@ -152,7 +165,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
 
   // useEffect(() => {
 
-  // }, [filteredData])
+  // }, [filteredDataResults])
 
   return (
     <div>
