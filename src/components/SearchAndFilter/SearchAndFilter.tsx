@@ -139,7 +139,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
 
   const messageIfSearchFailed = () => {
     const noResults = 'We were unable to find anything, please try again'
-    if (someFiltersAreNotDefault() && matchingFilterIds.length === 0) {
+    if (someFiltersAreNotDefault() && limitedListItems.length === 0) {
       setUserMessage(noResults) 
     } else if (searchTextBox !== '' && limitedListItems.length === 0) {
       setUserMessage(noResults) 
