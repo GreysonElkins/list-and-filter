@@ -15,10 +15,12 @@ const reduceSelectedFilters = (state: object, filterUpdate:filterUpdate) => {
 
 const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes}) => {
   const [selectedFilters, dispatch] = useReducer(reduceSelectedFilters, {})
-  const [filteredDataResults, setFilteredDataResults] = useState<Array<object>>([])
+  const [filteredDataResults, setFilteredDataResults] = useState<Array<string>>([])
   const [searchField, setSearchField] = useState<string>('')
-  const [searchedDataResults, setSearchedDataResults] = useState<Array<string>([])
+  const [searchedDataResults, setSearchedDataResults] = useState<Array<string>>([])
+  const [limitedListItems, setLimitedListItems] = useState<Array<object>>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [hasCompletedSearch, setHasCompletedSearch] = useState<boolean>(false)
 
   const makeFilterControlledState = useCallback(() => {
     if(filterTypes) {
@@ -51,9 +53,8 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
       <select 
         id={`${filterType}-selector`} 
         onChange={(event) => {
-          searchData()
-          filterData()
           dispatch({type: filterType, value: event.target.value})
+          // filterData()
         }}
         value={selectedFilters[filterType]}
       >
@@ -65,8 +66,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
   }
 
   const filterData = useCallback(() => {
-    let result:object[] = []
-
+    let result:string[] = []
     const someFilterIsSelected = ():boolean => {
       return Object.values(selectedFilters).some(filter => filter !== 'All')
     }
@@ -80,16 +80,19 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
         } 
       })
     }
+
     setFilteredDataResults(result)
+    setHasCompletedSearch(true)
   }, [allData, filterTypes, selectedFilters])
 
   const cleanDataForSearch = (item: object):any[] => {
-    Object.values(item).reduce((values, value) => {
+    return Object.values(item).reduce((values:object[], value) => {
       if (Array.isArray(value)) {
-        return values.concat(value)
+        values.concat(value)
       } else {
-        return value.push(value)
+        values.push(value)
       }
+      return values
     }, [])
   }
 
@@ -105,7 +108,8 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
         }
       )}
 
-    setFilteredDataResults(result)
+    setSearchedDataResults(result)
+    setHasCompletedSearch(true)
   } 
 
   const determineAvailableFilterValues = (filterType: string) => {
@@ -126,13 +130,15 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
     return allOptions.sort()
   }
 
-  const findFiltersWithoutResults = ():boolean => {
-    const someFiltersArentDefault = () => {
-      return Object.keys(selectedFilters)
-        .some(filter => selectedFilters[filter] !== 'All')
-    }
+  const someFiltersAreNotDefault = useCallback(() => {
+    return Object.keys(selectedFilters)
+      .some(filter => selectedFilters[filter] !== 'All')
+  }, [selectedFilters])
 
-   if (someFiltersArentDefault() && filteredDataResults.length === 0) {
+  const checkIfSearchFailed= ():boolean => {
+   if (someFiltersAreNotDefault() && filteredDataResults.length === 0) {
+     return true
+   } else if (searchField !== '' && filteredDataResults.length === 0) {
      return true
    } else {
      return false
@@ -140,9 +146,9 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
   }
 
   const determineListItems = () => {
-    if (filteredDataResults.length > 0) {
-      return <List listItems={filteredDataResults} columns={columns}/>
-    } else if (findFiltersWithoutResults()) {
+    if (limitedListItems.length > 0) {
+      return <List listItems={limitedListItems} columns={columns}/>
+    } else if (checkIfSearchFailed()) {
       return (
         <> 
           <h3>We couldn't find any matching results</h3>
@@ -160,21 +166,42 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
     }
   }
 
+  const compareSearchAndFilterResults = useCallback(() => {
+    let matchingResults: object[] = []
+    if (searchField !== '' && someFiltersAreNotDefault()) {
+      matchingResults = allData.filter(item => {
+        return searchedDataResults.includes(item.id) && filteredDataResults.includes(item.id)
+      }) 
+    } else if (searchField !== '') {
+      matchingResults = allData.filter(item => searchedDataResults.includes(item.id))
+    } else if (someFiltersAreNotDefault()) {
+      matchingResults = allData.filter(item => filteredDataResults.includes(item.id))
+    }
+    setLimitedListItems(matchingResults)
+    
+  }, [allData, filteredDataResults, searchField, searchedDataResults, someFiltersAreNotDefault])
+
+  // is this where a render gets triggered?
+
   useEffect(() => {
     makeFilterControlledState()
     setIsLoading(false)
   }, [allData, filterTypes, isLoading, makeFilterControlledState])
 
-  // useEffect(() => {
+  useEffect(() => {
+    compareSearchAndFilterResults()
+    setHasCompletedSearch(false)
+  }, [compareSearchAndFilterResults, hasCompletedSearch])
 
-  // }, [filteredDataResults])
+  useEffect(() => {
+    filterData()
+  }, [filterData, selectedFilters])
 
   return (
     <div>
       <form 
         onSubmit={(event) => {
           event.preventDefault()
-          filterData()
           searchData()
         }
       }>
@@ -191,7 +218,6 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
           type="reset" 
           onClick={() => {
             setSearchField('')
-            filterData()
           }}
         >
           clear
