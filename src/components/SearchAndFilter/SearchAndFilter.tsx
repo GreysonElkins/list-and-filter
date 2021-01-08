@@ -54,7 +54,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
         id={`${filterType}-selector`} 
         onChange={(event) => {
           dispatch({type: filterType, value: event.target.value})
-          checkIfSearchFailed()
+          messageIfSearchFailed()
         }}
         value={selectedFilters[filterType]}
       >
@@ -80,7 +80,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
         } 
       })
     }
-
+    result = result.filter(item => item !== undefined)
     setMatchingFilterIds(result)
   }, [allData, filterTypes, selectedFilters])
 
@@ -106,6 +106,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
         if (itemsValues.some(value => value.includes(searchTextBox.toUpperCase()))) return item.id
         }
       )}
+      result = result.filter(item => item !== undefined)
 
     setMatchingSearchIds(result)
   } 
@@ -133,14 +134,19 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
       .some(filter => selectedFilters[filter] !== 'All')
   }, [selectedFilters])
 
-  const checkIfSearchFailed = ():string => {
+  const messageIfSearchFailed = () => {
+    const noResults = 'We were unable to find anything, please try again'
     if (someFiltersAreNotDefault() && matchingFilterIds.length === 0) {
-      return 'We were unable to find anything, please try again'
-      } else if (searchTextBox !== '' && limitedListItems.length === 0) {
-      return 'We were unable to find anything, please try again'
+      setUserMessage(noResults) 
+    } else if (searchTextBox !== '' && limitedListItems.length === 0) {
+      setUserMessage(noResults) 
     } else {
-      return ''
+      setUserMessage('')
     }
+
+    setTimeout(() => {
+      setUserMessage('')
+    },3000)
   }
 
   const determineListItems = () => {
@@ -148,7 +154,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
       return <List listItems={limitedListItems} columns={columns}/>
     } else {
       return (<>
-      <h2>{checkIfSearchFailed()}</h2>
+      <h3>{userMessage}</h3>
       <List listItems={allData} columns={columns}/>
       </>)
     }
@@ -181,7 +187,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
 
   useEffect(() => {
     compareSearchAndFilterResults()
-  }, [compareSearchAndFilterResults, matchingSearchIds, matchingFilterIds, userMessage])
+  }, [compareSearchAndFilterResults, matchingSearchIds, matchingFilterIds])
 
 
 
@@ -195,7 +201,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
         onSubmit={(event) => {
           event.preventDefault()
           searchData()
-          checkIfSearchFailed()
+          messageIfSearchFailed()
         }
       }>
         <input 
@@ -212,7 +218,6 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
           onClick={() => {
             setSearchTextBox('')
             setMatchingSearchIds([])
-            checkIfSearchFailed()
           }}
         >
           clear
@@ -224,7 +229,6 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
           <button onClick={resetFilters}>Reset</button>
         </>
       }
-      <h3>{userMessage}</h3>
       {determineListItems()}
     </div>
   )
