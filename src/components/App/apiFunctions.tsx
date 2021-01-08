@@ -5,7 +5,7 @@ export const cleanRestaurantData = (restaurants: rawRestaurantData[]): restauran
     { id, name, city, state, telephone, tags, website, genre, attire }
       ) => {
         return {
-            id, name, city, state, telephone, tags, website, genre: genre.split(','), attire
+            id, name, city, state, telephone, tags: tags.split(', '), website, genre: genre.split(','), attire
         } 
       })
   return alphabetizeRestaurantByName(cleanedData)
