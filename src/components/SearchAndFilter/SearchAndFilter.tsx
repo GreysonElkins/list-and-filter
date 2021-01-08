@@ -66,7 +66,8 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
   }
 
   const filterData = useCallback(() => {
-    let result:string[] = []
+    let result:Array<{id:string}> = []
+    
     const someFilterIsSelected = ():boolean => {
       return Object.values(selectedFilters).some(filter => filter !== 'All')
     }
@@ -74,14 +75,16 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
     if (filterTypes && someFilterIsSelected()) {
       filterTypes.forEach(filter => {
         if (selectedFilters[filter] !== 'All') {
-          result = allData.map((item:stringKeyOptions) => {
-            if (item[filter].includes(selectedFilters[filter])) return item.id
+          const dataToSearch = result.length > 0 ? result : allData
+          result = dataToSearch.filter((item:stringKeyOptions) => {
+            return item[filter].includes(selectedFilters[filter])
           })
         } 
       })
     }
-    result = result.filter(item => item !== undefined)
-    setMatchingFilterIds(result)
+
+    const resultIds = result.map(item => item.id)
+    setMatchingFilterIds(resultIds)
   }, [allData, filterTypes, selectedFilters])
 
   const cleanDataForSearch = (item: object):any[] => {
@@ -146,7 +149,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
 
     setTimeout(() => {
       setUserMessage('')
-    },3000)
+    }, 3000)
   }
 
   const determineListItems = () => {
