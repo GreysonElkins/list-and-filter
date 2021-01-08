@@ -1,5 +1,5 @@
 export type filterProps = {
-  data: Array<object>
+  allData: Array<object>
   columns: Array<string>
   filterTypes?: Array<string>
 }

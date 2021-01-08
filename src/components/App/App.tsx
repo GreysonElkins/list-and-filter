@@ -34,7 +34,7 @@ const App: React.FC = () => {
       <header>Restaurant Finder</header>
       <main> 
         <SearchAndFilter 
-          data={restaurants} 
+          allData={restaurants} 
           columns={['name', 'city', 'state', 'telephone', 'genre', 'website']}
           filterTypes={['state', 'genre']}
         />
