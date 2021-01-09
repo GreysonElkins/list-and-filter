@@ -234,7 +234,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
           >search</button>
         <button 
           type="reset" 
-          disabled={searchTextBox==='' ? true : false}
+          // disabled={searchTextBox==='' ? true : false}
           onClick={() => {
             setSearchTextBox('')
             setFoundSearchIds([])
