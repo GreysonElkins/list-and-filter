@@ -1,20 +1,53 @@
-@media only screen and (max-width: 895px) {
-  body > * {
-    color: green
-  }
+@import '../../variables.scss';
 
-  .list-head {
-    display: none
-  }
-
-  tr {
+@media only screen and (max-width: 500px) {
+  .first-row-item, .second-row-item {
     display: flex;
     flex-direction: column;
     border-bottom: solid 1px white;
   }
 
-  .firstRowItem {
-    color: red;
+  .first-row-item {
+    text-align:center;
+  }
+}
+
+@media only screen and (max-width: 970px) {
+  .list-head {
+    display: none
+  }
+
+  .first-row-item {
+    background-color: $accent-one;
+    color: $background;
+    font-size: 1.25em;
+    padding: 1em;
+  }
+
+  .secondary-row-item {
+    display: flex;
+    flex-direction: column;
+    border-bottom: solid 1px white;
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+@media only screen and (min-width: 501px) {
+  .first-row-item {
+    padding-left: 1.5em;
+    text-align: left;
+  }
+}
+
+
+.list-head {
+  background-color: $accent-one;
+  color: $background;
+  font-size: 1.25em;
+
+  > tr > td {
+    padding: 4px;  
   }
 }
 

@@ -56,7 +56,7 @@ const List: React.FC<listProps> = ({ listItems, columns }) => {
         return (
           <td 
             key={`cell-${j}-${i}`}
-            className={j === 0 ? 'firstRowItem' : ''}
+            className={j === 0 ? 'first-row-item' : 'secondary-row-item'}
           >
             {cellValue}
           </td>
