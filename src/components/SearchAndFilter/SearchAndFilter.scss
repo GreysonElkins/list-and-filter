@@ -55,5 +55,14 @@
 }
 
 .search-filter-message {
+  background-color: $background;
+  width: 15em;
   color: $error;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 1.5em;
+  padding: 1em;
+  border: solid 2px $accent-three;
+  border-radius: 20px;
 }

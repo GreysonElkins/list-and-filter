@@ -157,12 +157,20 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
     setFoundSearchIds(result)
   } 
 
+  const removeUserMessage = () => {
+    setTimeout(() => {
+      setUserMessage('')
+    }, 3000)
+  }
+
   const messageIfSearchFailed = useCallback(() => {
     const noResults = 'We were unable to find anything based on your search, please try again'
     if (someFiltersAreSelected() && queryResults.length === 0) {
       setUserMessage(noResults) 
+      removeUserMessage()
     } else if (foundSearchIds && queryResults.length === 0) {
       setUserMessage(noResults) 
+      removeUserMessage()
     } else {
       setUserMessage('')
     }
@@ -213,7 +221,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
     filterData()
   }, [filterData, selectedFilterValues])
 
-    useEffect(() => {
+  useEffect(() => {
     if (searchTextBox === '') setFoundSearchIds(undefined)
   }, [searchTextBox])
 
@@ -234,7 +242,9 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
             id='search-box' 
             type="textbox" 
             placeholder="search" 
+            value={searchTextBox}
             onChange={(event) => {
+              console.log(event)
               setSearchTextBox(event.target.value)
               }}
             />
@@ -245,10 +255,11 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
             >search</button>
           <button 
             className="cta-two"
-            type="reset" 
+            // type="reset" 
             disabled={searchTextBox==='' ? true : false}
             onClick={() => {
               setSearchTextBox('')
+              setFoundSearchIds(undefined)
             }}
             >
             clear
@@ -266,11 +277,16 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
             </button>
           </div>
         }
-        <div className="search-filter-message">{userMessage}</div>
+        {userMessage &&
+          <div 
+            className={
+             `search-filter-message`
+            }>{userMessage}</div>
+        }
       </div>
       {determineListItems()}
     </>
   )
 }
 
-export default SearchAndFilter
+export default SearchAndFilter  
