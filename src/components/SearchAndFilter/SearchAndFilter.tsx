@@ -179,6 +179,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
   const compareSearchAndFilterResults = useCallback(() => {
     let matchingResults: object[] = []
     if (foundSearchIds && foundFilterIds) {
+      console.log(foundSearchIds)
       matchingResults = allData.filter(item => {
         return foundSearchIds.includes(item.id) && foundFilterIds.includes(item.id)
       }) 
@@ -234,10 +235,8 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
           >search</button>
         <button 
           type="reset" 
-          // disabled={searchTextBox==='' ? true : false}
           onClick={() => {
             setSearchTextBox('')
-            setFoundSearchIds([])
           }}
         >
           clear
