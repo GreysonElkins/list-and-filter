@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 
 import { listProps } from './definitions'
 import { stringKeyOptions } from '../SearchAndFilter/definitions'
+import './List.scss'
 
 const List: React.FC<listProps> = ({ listItems, columns }) => {
   const [pageNumber, setPageNumber] = useState<number>(1)
@@ -20,7 +21,7 @@ const List: React.FC<listProps> = ({ listItems, columns }) => {
         </td>)
     })
     return (
-      <thead>
+      <thead className="list-head">
         <tr>
         {htmlColumns}
         </tr>
@@ -50,11 +51,13 @@ const List: React.FC<listProps> = ({ listItems, columns }) => {
         try {
           cellValue = examineCell(item[column])
         } catch (e) {
-          console.error(e)
-          
+          console.error(e) 
         }
         return (
-          <td key={`cell-${j}-${i}`}>
+          <td 
+            key={`cell-${j}-${i}`}
+            className={j === 0 ? 'firstRowItem' : ''}
+          >
             {cellValue}
           </td>
         )

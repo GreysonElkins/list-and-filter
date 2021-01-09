@@ -1,0 +1,23 @@
+@media only screen and (max-width: 895px) {
+  body > * {
+    color: green
+  }
+
+  .list-head {
+    display: none
+  }
+
+  tr {
+    display: flex;
+    flex-direction: column;
+    border-bottom: solid 1px white;
+  }
+
+  .firstRowItem {
+    color: red;
+  }
+}
+
+table {
+  margin: 0 auto;
+}
