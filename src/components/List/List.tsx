@@ -1,3 +1,4 @@
+/* eslint-disable no-throw-literal */
 import React, { useEffect, useState } from 'react'
 
 
@@ -12,15 +13,22 @@ const List: React.FC<listProps> = ({ listItems, columns }) => {
   }, [listItems])
 
   const makeTableColumns = () => {
-    const htmlColumns = columns.map(column => <td>{column}</td>)
+    const htmlColumns = columns.map((column, i) => {
+      return (
+        <td key={`${column}-${i}`}>
+          {column}
+        </td>)
+    })
     return (
       <thead>
+        <tr>
         {htmlColumns}
+        </tr>
       </thead>
     )
   }
 
-  const examineCell = (cellInfo:any) => {
+  const examineCell = (cellInfo:any):string | React.ReactNode => {
     if (Array.isArray(cellInfo)) {
       return cellInfo.join(', ')
     } else if (cellInfo.includes('www.') || cellInfo.includes('http')) {
@@ -36,16 +44,22 @@ const List: React.FC<listProps> = ({ listItems, columns }) => {
 
   const makeDataRows = () => {
     const pageOfItems = paginateList()
-    return pageOfItems.reduce((rows: React.ReactNode[], item:stringKeyOptions): React.ReactNode[] => {
-      const row = columns.map(column => {
+    return pageOfItems.reduce((rows: React.ReactNode[], item:stringKeyOptions, i): React.ReactNode[] => {
+      let cellValue:string | React.ReactNode = 'unknown'
+      const row = columns.map((column, j) => {
         try {
-          return <td>{examineCell(item[column])}</td>
+          cellValue = examineCell(item[column])
         } catch (e) {
           console.error(e)
-          return <td>unknown</td>
+          
         }
+        return (
+          <td key={`cell-${j}-${i}`}>
+            {cellValue}
+          </td>
+        )
       })
-      rows = rows.concat(<tr>{row}</tr>)
+      rows = rows.concat(<tr key={`row-${i}`}>{row}</tr>)
       return rows
     }, [])
   }
@@ -87,7 +101,9 @@ const List: React.FC<listProps> = ({ listItems, columns }) => {
     <>
       <table>
         {makeTableColumns()}
+        <tbody>
         {makeDataRows()}
+        </tbody>
       </table>
       {makeListPageNavigation()}
     </>

@@ -43,25 +43,37 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
 
     const options = availableOptions.reduce((options:React.ReactNode[], option, i) => {
         if (availableOptions.indexOf(option) === i) {
-          options.push(<option value={option.toString()}>{option}</option>)
+          options.push(
+            <option 
+              key={`${filterType}-${i}`} 
+              value={option.toString()}
+            >
+              {option}
+            </option>)
         }
         return options
       }, [])
 
     return (
-      <>
-      <label htmlFor={`${filterType}-selector`}>{filterType}</label>
+      <div key={`${filterType}-select/options`}>
+      <label 
+        htmlFor={`${filterType}-selector`}
+        key={`${filterType}-select-label`}
+      >
+        {filterType}
+      </label>
       <select 
+        key={`${filterType}-select`}
         id={`${filterType}-selector`} 
         onChange={(event) => {
           dispatchFilters({type: filterType, value: event.target.value})
         }}
         value={selectedFilterValues[filterType]}
       >
-        <option value="">All</option>
+        <option value="All" key={`${filterType}-all-option`}>All</option>
         {options}
       </select>
-      </>
+      </div>
     )
   }
 
