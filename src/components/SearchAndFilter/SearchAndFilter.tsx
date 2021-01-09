@@ -41,11 +41,12 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
   const createDomFilterOptions = (filterType: string) => {
     const availableOptions = determineAvailableFilterValues(filterType)
 
-    const options = availableOptions.map((option, i) => {
+    const options = availableOptions.reduce((options:React.ReactNode[], option, i) => {
         if (availableOptions.indexOf(option) === i) {
-          return <option value={option.toString()}>{option}</option>
+          options.push(<option value={option.toString()}>{option}</option>)
         }
-      })
+        return options
+      }, [])
 
     return (
       <>
