@@ -40,11 +40,18 @@
   }
 }
 
+.site-icon {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+}
 
 .list-head {
   background-color: $accent-one;
   color: $background;
   font-size: 1.25em;
+  text-align: center;
 
   > tr > td {
     padding: 4px;  
@@ -53,4 +60,21 @@
 
 table {
   margin: 0 auto;
+}
+
+.turn-page {
+  background: none;
+  border: none;
+  font-weight: bold;
+  font-size: 2em;
+  color: $accent-one;
+}
+
+.pages {
+  display: flex;
+  align-items: center;
+
+  > * {
+    padding: .5em 1em;
+  }
 }

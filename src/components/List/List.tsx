@@ -33,7 +33,12 @@ const List: React.FC<listProps> = ({ listItems, columns }) => {
     if (Array.isArray(cellInfo)) {
       return cellInfo.join(', ')
     } else if (cellInfo.includes('www.') || cellInfo.includes('http')) {
-      return <a href={cellInfo} title="Go to website"><span role="link">🌐</span></a>
+      return (
+        <a href={cellInfo} title="Go to website" className="site-icon">
+          <span role="link" className="site-icon">
+            🌐
+          </span>
+        </a>)
     } else if (typeof(cellInfo) === 'object') {
       throw `This data is too complex to display: ${cellInfo}`
     } else if (cellInfo === undefined) {
@@ -69,23 +74,28 @@ const List: React.FC<listProps> = ({ listItems, columns }) => {
 
   const makeListPageNavigation = () => {
     return (
-      <nav>
+      <>
+      <nav className="pages">
         <button 
+            className="turn-page"
             disabled={pageNumber > 1 ? false : true}
             onClick={() => setPageNumber(pageNumber - 1)}
+            title="previous page"
             >
-            previous
+            {'<'}
           </button>
             {pageNumber}
           <button
+            className="turn-page"
             disabled={paginateList(pageNumber + 1).length === 0 ? true : false}
             onClick={() => setPageNumber(pageNumber + 1)}
-            >
-            next
+            title="next page"
+          >
+            {'>'}
           </button>
-          <br />
-          showing 10 out of {listItems.length} items
       </nav>
+          showing 10 out of {listItems.length} items
+      </>
     )
   }
 
