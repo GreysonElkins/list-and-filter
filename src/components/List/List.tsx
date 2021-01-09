@@ -67,7 +67,7 @@ const List: React.FC<listProps> = ({ listItems, columns }) => {
             next
           </button>
           <br />
-          showing 10 out of {listItems.length} restaurants
+          showing 10 out of {listItems.length} items
       </nav>
     )
   }

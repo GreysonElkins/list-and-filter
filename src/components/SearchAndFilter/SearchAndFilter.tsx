@@ -6,7 +6,7 @@ import { filterProps, filterUpdate, stringKeyOptions } from './definitions'
 
 import './SearchAndFilter.css'
 
-const reduceSelectedFilters = (state: object, filterUpdate:filterUpdate) => {
+const changeSelectedFilters = (state: object, filterUpdate:filterUpdate) => {
   return {
     ...state,
     [filterUpdate.type]: filterUpdate.value || 'All'
@@ -14,20 +14,20 @@ const reduceSelectedFilters = (state: object, filterUpdate:filterUpdate) => {
 }
 
 const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes}) => {
-  const [selectedFilterValues, dispatch] = useReducer(reduceSelectedFilters, {})
-  const [matchingFilterIds, setMatchingFilterIds] = useState<Array<string> | undefined>(undefined)
+  const [selectedFilterValues, dispatchFilters] = useReducer(changeSelectedFilters, {})
+  const [foundFilterIds, setFoundFilterIds] = useState<Array<string> | undefined>(undefined)
   const [searchTextBox, setSearchTextBox] = useState<string>('')
-  const [matchingSearchIds, setMatchingSearchIds] = useState<Array<string> | undefined>(undefined)
-  const [limitedListItems, setLimitedListItems] = useState<Array<object>>([])
+  const [foundSearchIds, setFoundSearchIds] = useState<Array<string> | undefined>(undefined)
+  const [queriedListItems, setQueriedListItems] = useState<Array<object>>([])
   const [userMessage, setUserMessage] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(true)
   
-  const makeFilterControlledState = useCallback(() => {
+  const saveFilterTypes = useCallback(() => {
     if(filterTypes) {
       filterTypes.forEach(filterName => {
         try {
           if (allData.every(piece => Object.keys(piece).includes(filterName))) {
-            dispatch({type: filterName})
+            dispatchFilters({type: filterName})
           } else {
             throw `Some or all of the data is missing the key "${filterName}"`
           }
@@ -38,7 +38,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
     }
   }, [allData, filterTypes])
 
-  const createDomFilterOptions = (filterType: string) => {
+  const createFilterOptions = (filterType: string) => {
     const availableOptions = determineAvailableFilterValues(filterType)
 
     const options = availableOptions.reduce((options:React.ReactNode[], option, i) => {
@@ -54,7 +54,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
       <select 
         id={`${filterType}-selector`} 
         onChange={(event) => {
-          dispatch({type: filterType, value: event.target.value})
+          dispatchFilters({type: filterType, value: event.target.value})
         }}
         value={selectedFilterValues[filterType]}
       >
@@ -67,14 +67,14 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
 
   const determineAvailableFilterValues = (filterType: string) => {
     const allOptions = allData
-      .reduce((options:(string | number | boolean)[], item:stringKeyOptions): (string | number | boolean)[] => {
+      .reduce((options:(string | number | boolean)[], option:stringKeyOptions): (string | number | boolean)[] => {
         try {
-          if (Array.isArray(item[filterType])) {
-            options = options.concat(item[filterType])
-          } else if (typeof item[filterType] === 'object') {
+          if (Array.isArray(option[filterType])) {
+            options = options.concat(option[filterType])
+          } else if (typeof option[filterType] === 'object') {
             throw `Some of the filter options for ${filterType} were ignored because the data was too complex`
           } else {
-            options.push(item[filterType])
+            options.push(option[filterType])
           }
         } catch (e) {
           console.error(e)
@@ -101,11 +101,11 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
         } 
       })
     } else {
-      setMatchingFilterIds(undefined)
+      setFoundFilterIds(undefined)
     }
 
     const resultIds = result.map(item => item.id)
-    setMatchingFilterIds(resultIds)
+    setFoundFilterIds(resultIds)
   }, [allData, someFiltersAreSelected, filterTypes, selectedFilterValues])
 
 
@@ -141,19 +141,14 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
       }, [])
     }
 
-    setMatchingSearchIds(result)
+    setFoundSearchIds(result)
   } 
 
-  const someFiltersAreNotDefault = useCallback(() => {
-    return Object.keys(selectedFilterValues)
-      .some(filter => selectedFilterValues[filter] !== 'All')
-  }, [selectedFilterValues])
-
   const messageIfSearchFailed = useCallback(() => {
-    const noResults = 'We were unable to find anything, please try again'
-    if (someFiltersAreNotDefault() && limitedListItems.length === 0) {
+    const noResults = 'We were unable to find anything based on your search, please try again'
+    if (someFiltersAreSelected() && queriedListItems.length === 0) {
       setUserMessage(noResults) 
-    } else if (matchingSearchIds && limitedListItems.length === 0) {
+    } else if (foundSearchIds && queriedListItems.length === 0) {
       setUserMessage(noResults) 
     } else {
       setUserMessage('')
@@ -162,11 +157,11 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
     setTimeout(() => {
       setUserMessage('')
     }, 3000)
-  }, [limitedListItems.length, matchingSearchIds, someFiltersAreNotDefault])
+  }, [queriedListItems.length, foundSearchIds, someFiltersAreSelected])
 
   const determineListItems = () => {
-    if (limitedListItems.length > 0) {
-      return <List listItems={limitedListItems} columns={columns}/>
+    if (queriedListItems.length > 0) {
+      return <List listItems={queriedListItems} columns={columns}/>
     } else {
       return (<>
       <h3>{userMessage}</h3>
@@ -177,45 +172,44 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
 
   const resetFilters = () => {
     if(filterTypes) {
-      filterTypes.forEach(filter => dispatch({type: filter}))
-      setMatchingFilterIds(undefined)
+      filterTypes.forEach(filter => dispatchFilters({type: filter}))
     }
   }
 
   const compareSearchAndFilterResults = useCallback(() => {
     let matchingResults: object[] = []
-    if (matchingSearchIds && matchingFilterIds) {
+    if (foundSearchIds && foundFilterIds) {
       matchingResults = allData.filter(item => {
-        return matchingSearchIds.includes(item.id) && matchingFilterIds.includes(item.id)
+        return foundSearchIds.includes(item.id) && foundFilterIds.includes(item.id)
       }) 
-    } else if (matchingSearchIds) {
-      matchingResults = allData.filter(item => matchingSearchIds.includes(item.id))
-    } else if (matchingFilterIds) {
-      matchingResults = allData.filter(item => matchingFilterIds.includes(item.id))
+    } else if (foundSearchIds) {
+      matchingResults = allData.filter(item => foundSearchIds.includes(item.id))
+    } else if (foundFilterIds) {
+      matchingResults = allData.filter(item => foundFilterIds.includes(item.id))
     }
-    setLimitedListItems(matchingResults)
+    setQueriedListItems(matchingResults)
     messageIfSearchFailed()
-  }, [allData, matchingFilterIds, matchingSearchIds, messageIfSearchFailed])
+  }, [allData, foundFilterIds, foundSearchIds, messageIfSearchFailed])
 
   useEffect(() => {
-    makeFilterControlledState()
+    saveFilterTypes()
     setIsLoading(false)
-  }, [allData, filterTypes, isLoading, makeFilterControlledState])
+  }, [allData, filterTypes, isLoading, saveFilterTypes])
 
   useEffect(() => {
     compareSearchAndFilterResults()
-  }, [compareSearchAndFilterResults, matchingSearchIds, matchingFilterIds])
+  }, [compareSearchAndFilterResults, foundSearchIds, foundFilterIds])
 
   useEffect(() => {
     filterData()
   }, [filterData, selectedFilterValues])
 
     useEffect(() => {
-    if (searchTextBox === '') setMatchingSearchIds(undefined)
+    if (searchTextBox === '') setFoundSearchIds(undefined)
   }, [searchTextBox])
 
   useEffect(() => {
-    if (!someFiltersAreSelected()) setMatchingFilterIds(undefined)
+    if (!someFiltersAreSelected()) setFoundFilterIds(undefined)
   }, [someFiltersAreSelected])
 
   return (
@@ -234,12 +228,16 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
             setSearchTextBox(event.target.value)
             }}
           />
-        <button type="submit">search</button>
+        <button 
+          type="submit"
+          disabled={searchTextBox==='' ? true : false}
+          >search</button>
         <button 
           type="reset" 
+          disabled={searchTextBox==='' ? true : false}
           onClick={() => {
             setSearchTextBox('')
-            setMatchingSearchIds([])
+            setFoundSearchIds([])
           }}
         >
           clear
@@ -247,7 +245,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
       </form>
       {filterTypes &&
         <>
-          {filterTypes.map(filter => createDomFilterOptions(filter))}
+          {filterTypes.map(filter => createFilterOptions(filter))}
           <button onClick={resetFilters}>Reset</button>
         </>
       }
