@@ -5,6 +5,7 @@ import SearchAndFilter from '../SearchAndFilter/SearchAndFilter'
 import { restaurant }from './definitions'
 import { getRestaurants } from './apiFunctions'
 import fakeData from './FakeData'
+import loadingIcon from '../../loading.gif'
 
 import './App.scss';
 
@@ -20,6 +21,7 @@ const App: React.FC = () => {
       //       setRestaurants(restaurants)
       //     } else {
       //       setError(restaurants)
+      //       setIsLoading(false)
       //     }
       //   })
       //   .then(() => {
@@ -37,9 +39,12 @@ const App: React.FC = () => {
           allData={restaurants} 
           columns={['name', 'city', 'state', 'telephone', 'genre', 'website']}
           filterTypes={['state', 'genre']}
-        />
+          />
         {isLoading &&
-          <img src="/loading.gif" alt="loading icon" />
+          <img src={loadingIcon} alt="loading icon" />
+        }
+        {error &&
+          error
         }
       </main>
     </div>
