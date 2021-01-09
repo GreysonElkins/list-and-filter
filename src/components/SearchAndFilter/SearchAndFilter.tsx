@@ -18,7 +18,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
   const [foundFilterIds, setFoundFilterIds] = useState<Array<string> | undefined>(undefined)
   const [searchTextBox, setSearchTextBox] = useState<string>('')
   const [foundSearchIds, setFoundSearchIds] = useState<Array<string> | undefined>(undefined)
-  const [queriedListItems, setQueriedListItems] = useState<Array<object>>([])
+  const [queryResults, setQueryResults] = useState<Array<object>>([])
   const [userMessage, setUserMessage] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(true)
   
@@ -146,18 +146,18 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
 
   const messageIfSearchFailed = useCallback(() => {
     const noResults = 'We were unable to find anything based on your search, please try again'
-    if (someFiltersAreSelected() && queriedListItems.length === 0) {
+    if (someFiltersAreSelected() && queryResults.length === 0) {
       setUserMessage(noResults) 
-    } else if (foundSearchIds && queriedListItems.length === 0) {
+    } else if (foundSearchIds && queryResults.length === 0) {
       setUserMessage(noResults) 
     } else {
       setUserMessage('')
     }
-  }, [queriedListItems.length, foundSearchIds, someFiltersAreSelected])
+  }, [queryResults.length, foundSearchIds, someFiltersAreSelected])
 
   const determineListItems = () => {
-    if (queriedListItems.length > 0) {
-      return <List listItems={queriedListItems} columns={columns}/>
+    if (queryResults.length > 0) {
+      return <List listItems={queryResults} columns={columns}/>
     } else {
       return (<>
       <h3>{userMessage}</h3>
@@ -183,7 +183,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
     } else if (foundFilterIds) {
       matchingResults = allData.filter(item => foundFilterIds.includes(item.id))
     }
-    setQueriedListItems(matchingResults)
+    setQueryResults(matchingResults)
 
   }, [allData, foundFilterIds, foundSearchIds])
 
