@@ -6,7 +6,7 @@ import { restaurant }from './definitions'
 import { getRestaurants } from './apiFunctions'
 import fakeData from './FakeData'
 
-import './App.css';
+import './App.scss';
 
 const App: React.FC = () => {
   const [restaurants, setRestaurants] = useState<restaurant[]>([])
