@@ -31,7 +31,7 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      <header>Restaurant Finder</header>
+      <header><h1>Restaurant Locator</h1></header>
       <main> 
         <SearchAndFilter 
           allData={restaurants} 

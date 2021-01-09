@@ -4,6 +4,7 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+  margin-bottom: 1em;
 }
 
 .filters {
@@ -30,18 +31,26 @@
   border-radius: 5px;
 } 
 
-.cta-one:disabled {
+.cta-one:disabled, {
   background: $background;
-  border-color: $accent-three;
+  border: solid 1px $faded-text;
+  color: $faded-text;
+}
+
+.cta-two:disabled {
+  border: none;
+  color: $faded-text;
 }
 
 .cta-one {
   border-color: $accent-one;
   background: $accent-one;
+  color: $background;
 }
 
 .cta-two {
   background: $background;
+  color: $accent-four;
 }
 
 .search-filter-message {

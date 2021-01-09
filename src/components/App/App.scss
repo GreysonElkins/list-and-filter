@@ -4,3 +4,12 @@ body {
   background-color: $background;
   color: $text;
 }
+
+header {
+  display: flex;
+  justify-content: center;
+}
+
+h1 {
+  color: $accent-one;
+}

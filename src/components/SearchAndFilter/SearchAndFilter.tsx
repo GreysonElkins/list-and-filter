@@ -222,52 +222,54 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
   }, [someFiltersAreSelected])
 
   return (
-    <div className="SearchAndFilter">
-      <form 
-        onSubmit={(event) => {
-          event.preventDefault()
-          searchData()
-        }
-      }>
-        <input 
-          id='search-box' 
-          type="textbox" 
-          placeholder="search" 
-          onChange={(event) => {
-            setSearchTextBox(event.target.value)
-            }}
-          />
-        <button 
-          className="cta-one"
-          type="submit"
-          disabled={searchTextBox==='' ? true : false}
-          >search</button>
-        <button 
-          className="cta-two"
-          type="reset" 
-          disabled={searchTextBox==='' ? true : false}
-          onClick={() => {
-            setSearchTextBox('')
-          }}
-          >
-          clear
-        </button>
-      </form>
-      {filterTypes &&
-        <div className="filters">
-          {filterTypes.map(filter => createFilterOptions(filter))}
+    <>
+      <div className="SearchAndFilter">
+        <form 
+          onSubmit={(event) => {
+            event.preventDefault()
+            searchData()
+          }
+        }>
+          <input 
+            id='search-box' 
+            type="textbox" 
+            placeholder="search" 
+            onChange={(event) => {
+              setSearchTextBox(event.target.value)
+              }}
+            />
+          <button 
+            className="cta-one"
+            type="submit"
+            disabled={searchTextBox==='' ? true : false}
+            >search</button>
           <button 
             className="cta-two"
-            disabled={someFiltersAreSelected() ? false : true}
-            onClick={resetFilters}
-          >
-            reset
+            type="reset" 
+            disabled={searchTextBox==='' ? true : false}
+            onClick={() => {
+              setSearchTextBox('')
+            }}
+            >
+            clear
           </button>
-        </div>
-      }
-      <div className="search-filter-message">{userMessage}</div>
+        </form>
+        {filterTypes &&
+          <div className="filters">
+            {filterTypes.map(filter => createFilterOptions(filter))}
+            <button 
+              className="cta-two"
+              disabled={someFiltersAreSelected() ? false : true}
+              onClick={resetFilters}
+            >
+              reset
+            </button>
+          </div>
+        }
+        <div className="search-filter-message">{userMessage}</div>
+      </div>
       {determineListItems()}
-    </div>
+    </>
   )
 }
 
