@@ -4,7 +4,7 @@ import React, { useReducer, useState, useEffect, useCallback } from 'react'
 import List from '../List/List'
 import { filterProps, filterUpdate, stringKeyOptions } from './definitions'
 
-import './SearchAndFilter.css'
+import './SearchAndFilter.scss'
 
 const changeSelectedFilters = (state: object, filterUpdate:filterUpdate) => {
   return {
@@ -55,8 +55,9 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
       }, [])
 
     return (
-      <div key={`${filterType}-select/options`}>
+      <div className="filter" key={`${filterType}-select/options`}>
       <label 
+        className="filter-label"
         htmlFor={`${filterType}-selector`}
         key={`${filterType}-select-label`}
       >
@@ -172,7 +173,6 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
       return <List listItems={queryResults} columns={columns}/>
     } else {
       return (<>
-      <h3>{userMessage}</h3>
       <List listItems={allData} columns={columns}/>
       </>)
     }
@@ -222,7 +222,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
   }, [someFiltersAreSelected])
 
   return (
-    <div>
+    <div className="SearchAndFilter">
       <form 
         onSubmit={(event) => {
           event.preventDefault()
@@ -238,24 +238,34 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
             }}
           />
         <button 
+          className="cta-one"
           type="submit"
           disabled={searchTextBox==='' ? true : false}
           >search</button>
         <button 
+          className="cta-two"
           type="reset" 
+          disabled={searchTextBox==='' ? true : false}
           onClick={() => {
             setSearchTextBox('')
           }}
-        >
+          >
           clear
         </button>
       </form>
       {filterTypes &&
-        <>
+        <div className="filters">
           {filterTypes.map(filter => createFilterOptions(filter))}
-          <button onClick={resetFilters}>Reset</button>
-        </>
+          <button 
+            className="cta-two"
+            disabled={someFiltersAreSelected() ? false : true}
+            onClick={resetFilters}
+          >
+            reset
+          </button>
+        </div>
       }
+      <div className="search-filter-message">{userMessage}</div>
       {determineListItems()}
     </div>
   )

@@ -1,0 +1,49 @@
+@import '../../variables.scss';
+
+.SearchAndFilter {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.filters {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.filter > * {
+  padding: 0 .2em;
+}
+
+.filter-label {
+  font-weight: 500;
+}
+
+.SearchAndFilter > * > * {
+  margin: 1px;
+}
+
+.cta-one, .cta-two {
+  border: solid 2px $accent-three;
+  padding: 4px 8px;
+  border-radius: 5px;
+} 
+
+.cta-one:disabled {
+  background: $background;
+  border-color: $accent-three;
+}
+
+.cta-one {
+  border-color: $accent-one;
+  background: $accent-one;
+}
+
+.cta-two {
+  background: $background;
+}
+
+.search-filter-message {
+  color: $error;
+}
