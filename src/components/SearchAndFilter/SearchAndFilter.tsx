@@ -153,10 +153,6 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
     } else {
       setUserMessage('')
     }
-
-    setTimeout(() => {
-      setUserMessage('')
-    }, 3000)
   }, [queriedListItems.length, foundSearchIds, someFiltersAreSelected])
 
   const determineListItems = () => {
@@ -179,7 +175,6 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
   const compareSearchAndFilterResults = useCallback(() => {
     let matchingResults: object[] = []
     if (foundSearchIds && foundFilterIds) {
-      console.log(foundSearchIds)
       matchingResults = allData.filter(item => {
         return foundSearchIds.includes(item.id) && foundFilterIds.includes(item.id)
       }) 
@@ -189,7 +184,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
       matchingResults = allData.filter(item => foundFilterIds.includes(item.id))
     }
     setQueriedListItems(matchingResults)
-    messageIfSearchFailed()
+
   }, [allData, foundFilterIds, foundSearchIds, messageIfSearchFailed])
 
   useEffect(() => {
@@ -199,7 +194,8 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
 
   useEffect(() => {
     compareSearchAndFilterResults()
-  }, [compareSearchAndFilterResults, foundSearchIds, foundFilterIds])
+        messageIfSearchFailed()
+  }, [compareSearchAndFilterResults, foundSearchIds, foundFilterIds, messageIfSearchFailed])
 
   useEffect(() => {
     filterData()
