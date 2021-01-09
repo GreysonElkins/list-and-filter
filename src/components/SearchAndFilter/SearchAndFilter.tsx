@@ -129,15 +129,14 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
     let result:any[] = [];
 
     if (searchTextBox !== '') {
-      result = allData.map(item => {
+      result = allData.reduce((results:string[], item) => {
         let itemsValues:string[] = makeDataSearchFriendly(item)
         if (itemsValues.some(value => value.includes(searchTextBox.toUpperCase()))) {
-          return item.id
+          results.push(item.id)
         }
-      })
+        return results
+      }, [])
     }
-    
-    result = result.filter(item => item !== undefined)
 
     setMatchingSearchIds(result)
   } 
