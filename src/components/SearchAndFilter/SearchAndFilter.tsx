@@ -185,7 +185,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
     }
     setQueriedListItems(matchingResults)
 
-  }, [allData, foundFilterIds, foundSearchIds, messageIfSearchFailed])
+  }, [allData, foundFilterIds, foundSearchIds])
 
   useEffect(() => {
     saveFilterTypes()
@@ -194,7 +194,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
 
   useEffect(() => {
     compareSearchAndFilterResults()
-        messageIfSearchFailed()
+    messageIfSearchFailed()
   }, [compareSearchAndFilterResults, foundSearchIds, foundFilterIds, messageIfSearchFailed])
 
   useEffect(() => {
