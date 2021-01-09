@@ -1,6 +1,6 @@
 @import '../../variables.scss';
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 650px) {
   .first-row-item, .second-row-item {
     display: flex;
     flex-direction: column;
@@ -12,7 +12,7 @@
   }
 }
 
-@media only screen and (max-width: 970px) {
+@media only screen and (max-width: 1000px) {
   .list-head {
     display: none
   }
@@ -20,7 +20,7 @@
   .first-row-item {
     background-color: $accent-one;
     color: $background;
-    font-size: 1.25em;
+    font-size: 1.2em;
     padding: 1em;
   }
 
@@ -33,11 +33,25 @@
   }
 }
 
-@media only screen and (min-width: 501px) {
+@media only screen and (min-width: 651px) {
   .first-row-item {
     padding-left: 1.5em;
     text-align: left;
   }
+}
+
+@media only screen and (min-width: 1001px) {
+  .first-row-item {
+    opacity: 65%;
+  }
+}
+
+.first-row-item {
+  font-weight: bold;
+}
+
+.first-row-item, .second-row-item {
+  padding: 0 .7em;
 }
 
 .site-icon {
@@ -50,8 +64,9 @@
 .list-head {
   background-color: $accent-one;
   color: $background;
-  font-size: 1.25em;
+  font-size: 1.1em;
   text-align: center;
+  font-weight: bold;
 
   > tr > td {
     padding: 4px;  
@@ -73,8 +88,14 @@ table {
 .pages {
   display: flex;
   align-items: center;
-
+  justify-content: center;
   > * {
     padding: .5em 1em;
   }
+}
+
+.item-count {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

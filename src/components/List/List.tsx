@@ -94,7 +94,9 @@ const List: React.FC<listProps> = ({ listItems, columns }) => {
             {'>'}
           </button>
       </nav>
-          showing 10 out of {listItems.length} items
+          <div className="item-count">
+            showing 10 out of {listItems.length} items
+          </div>
       </>
     )
   }
