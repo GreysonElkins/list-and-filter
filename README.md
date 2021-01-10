@@ -1,6 +1,7 @@
 <br />
 <!-- <center> -->
 <p align="center">
+  <p>
   <a href="https://github.com/GreysonElkins/list-and-filter">
     <img src="./src/loading.gif" style="width:5em"/>
   </a>
@@ -19,7 +20,7 @@
   ·
   <a href="https://github.com/GreysonElkins/list-and-filter/issues">Request Feature</a>
   </p>
-</center>
+</p>
 ## Table of Contents
 
 * [About the Project](#about-the-project)
