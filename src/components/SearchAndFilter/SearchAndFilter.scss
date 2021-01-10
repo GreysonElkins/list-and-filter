@@ -1,0 +1,91 @@
+@import '../../variables.scss';
+
+.SearchAndFilter {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 1em;
+  margin-top: 1em;
+}
+
+.filters {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.filter > * {
+  padding: 0 .2em;
+}
+
+.filter-label {
+  font-weight: 500;
+  font-size: .7em;
+}
+
+.SearchAndFilter > * > * {
+  margin: 1px;
+}
+
+.cta-one, .cta-two {
+  border: solid 2px $accent-three;
+  padding: 4px 8px;
+  border-radius: 5px;
+} 
+
+.cta-one:disabled, {
+  background: $background;
+  border: solid 1px $faded-text;
+  color: $faded-text;
+}
+
+.cta-two:disabled {
+  border: none;
+  color: $faded-text;
+}
+
+.cta-one {
+  border-color: $accent-one;
+  background: $accent-one;
+  color: $background;
+}
+
+.cta-two {
+  background: $background;
+  color: $accent-four;
+}
+
+.search-filter-message {
+  background-color: $background;
+  width: 15em;
+  color: $error;
+  position: absolute;
+  bottom: 3em;
+  right: 0;
+  margin: 1.5em;
+  padding: 1em;
+  border: solid 2px $accent-three;
+  border-radius: 20px;
+}
+
+.searching-icon-container {
+  width: 100%;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.searching-icon {
+  width: 5em;
+  animation: fade-in 2s;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0%
+  }
+  to {
+    opacity: 100%
+  }
+}

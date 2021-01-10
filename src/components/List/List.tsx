@@ -1,8 +1,10 @@
+/* eslint-disable no-throw-literal */
 import React, { useEffect, useState } from 'react'
 
 
 import { listProps } from './definitions'
 import { stringKeyOptions } from '../SearchAndFilter/definitions'
+import './List.scss'
 
 const List: React.FC<listProps> = ({ listItems, columns }) => {
   const [pageNumber, setPageNumber] = useState<number>(1)
@@ -12,19 +14,31 @@ const List: React.FC<listProps> = ({ listItems, columns }) => {
   }, [listItems])
 
   const makeTableColumns = () => {
-    const htmlColumns = columns.map(column => <td>{column}</td>)
+    const htmlColumns = columns.map((column, i) => {
+      return (
+        <td key={`${column}-${i}`}>
+          {column}
+        </td>)
+    })
     return (
-      <thead>
+      <thead className="list-head">
+        <tr>
         {htmlColumns}
+        </tr>
       </thead>
     )
   }
 
-  const examineCell = (cellInfo:any) => {
+  const examineCell = (cellInfo:any):string | React.ReactNode => {
     if (Array.isArray(cellInfo)) {
       return cellInfo.join(', ')
     } else if (cellInfo.includes('www.') || cellInfo.includes('http')) {
-      return <a href={cellInfo} title="Go to website"><span role="link">🌐</span></a>
+      return (
+        <a href={cellInfo} title="Go to website" className="site-icon">
+          <span role="link" className="site-icon">
+            🌐
+          </span>
+        </a>)
     } else if (typeof(cellInfo) === 'object') {
       throw `This data is too complex to display: ${cellInfo}`
     } else if (cellInfo === undefined) {
@@ -36,39 +50,54 @@ const List: React.FC<listProps> = ({ listItems, columns }) => {
 
   const makeDataRows = () => {
     const pageOfItems = paginateList()
-    return pageOfItems.reduce((rows: React.ReactNode[], item:stringKeyOptions): React.ReactNode[] => {
-      const row = columns.map(column => {
+    return pageOfItems.reduce((rows: React.ReactNode[], item:stringKeyOptions, i): React.ReactNode[] => {
+      let cellValue:string | React.ReactNode = 'unknown'
+      const row = columns.map((column, j) => {
         try {
-          return <td>{examineCell(item[column])}</td>
+          cellValue = examineCell(item[column])
         } catch (e) {
-          console.error(e)
-          return <td>unknown</td>
+          console.error(e) 
         }
+        return (
+          <td 
+            key={`cell-${j}-${i}`}
+            className={j === 0 ? 'first-row-item' : 'secondary-row-item'}
+          >
+            {cellValue}
+          </td>
+        )
       })
-      rows = rows.concat(<tr>{row}</tr>)
+      rows = rows.concat(<tr key={`row-${i}`}>{row}</tr>)
       return rows
     }, [])
   }
 
   const makeListPageNavigation = () => {
     return (
-      <nav>
+      <>
+      <nav className="pages">
         <button 
+            className="turn-page"
             disabled={pageNumber > 1 ? false : true}
             onClick={() => setPageNumber(pageNumber - 1)}
+            title="previous page"
             >
-            previous
+            {'<'}
           </button>
             {pageNumber}
           <button
+            className="turn-page"
             disabled={paginateList(pageNumber + 1).length === 0 ? true : false}
             onClick={() => setPageNumber(pageNumber + 1)}
-            >
-            next
+            title="next page"
+          >
+            {'>'}
           </button>
-          <br />
-          showing 10 out of {listItems.length} items
       </nav>
+          <div className="item-count">
+            showing 10 out of {listItems.length} items
+          </div>
+      </>
     )
   }
 
@@ -87,7 +116,9 @@ const List: React.FC<listProps> = ({ listItems, columns }) => {
     <>
       <table>
         {makeTableColumns()}
+        <tbody>
         {makeDataRows()}
+        </tbody>
       </table>
       {makeListPageNavigation()}
     </>

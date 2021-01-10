@@ -4,7 +4,7 @@ import React, { useReducer, useState, useEffect, useCallback } from 'react'
 import List from '../List/List'
 import { filterProps, filterUpdate, stringKeyOptions } from './definitions'
 
-import './SearchAndFilter.css'
+import './SearchAndFilter.scss'
 
 const changeSelectedFilters = (state: object, filterUpdate:filterUpdate) => {
   return {
@@ -13,14 +13,15 @@ const changeSelectedFilters = (state: object, filterUpdate:filterUpdate) => {
   }
 }
 
-const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes}) => {
+const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes, loadingIcon}) => {
   const [selectedFilterValues, dispatchFilters] = useReducer(changeSelectedFilters, {})
   const [foundFilterIds, setFoundFilterIds] = useState<Array<string> | undefined>(undefined)
   const [searchTextBox, setSearchTextBox] = useState<string>('')
   const [foundSearchIds, setFoundSearchIds] = useState<Array<string> | undefined>(undefined)
-  const [queriedListItems, setQueriedListItems] = useState<Array<object>>([])
+  const [queryResults, setQueryResults] = useState<Array<object>>([])
   const [userMessage, setUserMessage] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [isSearching, setIsSearching] = useState<boolean>(false)
   
   const saveFilterTypes = useCallback(() => {
     if(filterTypes) {
@@ -43,25 +44,38 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
 
     const options = availableOptions.reduce((options:React.ReactNode[], option, i) => {
         if (availableOptions.indexOf(option) === i) {
-          options.push(<option value={option.toString()}>{option}</option>)
+          options.push(
+            <option 
+              key={`${filterType}-${i}`} 
+              value={option.toString()}
+            >
+              {option}
+            </option>)
         }
         return options
       }, [])
 
     return (
-      <>
-      <label htmlFor={`${filterType}-selector`}>{filterType}</label>
+      <div className="filter" key={`${filterType}-select/options`}>
+      <label 
+        className="filter-label"
+        htmlFor={`${filterType}-selector`}
+        key={`${filterType}-select-label`}
+      >
+        {filterType}
+      </label>
       <select 
+        key={`${filterType}-select`}
         id={`${filterType}-selector`} 
         onChange={(event) => {
           dispatchFilters({type: filterType, value: event.target.value})
         }}
         value={selectedFilterValues[filterType]}
       >
-        <option value="">All</option>
+        <option value="All" key={`${filterType}-all-option`}>All</option>
         {options}
       </select>
-      </>
+      </div>
     )
   }
 
@@ -92,6 +106,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
     let result:Array<{id:string}> = []
     
     if (filterTypes && someFiltersAreSelected()) {
+      setIsSearching(true)
       filterTypes.forEach(filter => {
         if (selectedFilterValues[filter] !== 'All') {
           const dataToSearch = result.length > 0 ? result : allData
@@ -130,8 +145,9 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
 
   const searchData = () => {
     let result:any[] = [];
-
+    
     if (searchTextBox !== '') {
+      setIsSearching(true)
       result = allData.reduce((results:string[], item) => {
         let itemsValues:string[] = makeDataSearchFriendly(item)
         if (itemsValues.some(value => value.includes(searchTextBox.toUpperCase()))) {
@@ -144,23 +160,30 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
     setFoundSearchIds(result)
   } 
 
+  const removeUserMessage = () => {
+    setTimeout(() => {
+      setUserMessage('')
+    }, 3000)
+  }
+
   const messageIfSearchFailed = useCallback(() => {
     const noResults = 'We were unable to find anything based on your search, please try again'
-    if (someFiltersAreSelected() && queriedListItems.length === 0) {
+    if (someFiltersAreSelected() && queryResults.length === 0) {
       setUserMessage(noResults) 
-    } else if (foundSearchIds && queriedListItems.length === 0) {
+      removeUserMessage()
+    } else if (foundSearchIds && queryResults.length === 0) {
       setUserMessage(noResults) 
+      removeUserMessage()
     } else {
       setUserMessage('')
     }
-  }, [queriedListItems.length, foundSearchIds, someFiltersAreSelected])
+  }, [queryResults.length, foundSearchIds, someFiltersAreSelected])
 
   const determineListItems = () => {
-    if (queriedListItems.length > 0) {
-      return <List listItems={queriedListItems} columns={columns}/>
+    if (queryResults.length > 0) {
+      return <List listItems={queryResults} columns={columns}/>
     } else {
       return (<>
-      <h3>{userMessage}</h3>
       <List listItems={allData} columns={columns}/>
       </>)
     }
@@ -183,8 +206,8 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
     } else if (foundFilterIds) {
       matchingResults = allData.filter(item => foundFilterIds.includes(item.id))
     }
-    setQueriedListItems(matchingResults)
-
+      setQueryResults(matchingResults)
+      setIsSearching(false)
   }, [allData, foundFilterIds, foundSearchIds])
 
   useEffect(() => {
@@ -201,7 +224,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
     filterData()
   }, [filterData, selectedFilterValues])
 
-    useEffect(() => {
+  useEffect(() => {
     if (searchTextBox === '') setFoundSearchIds(undefined)
   }, [searchTextBox])
 
@@ -210,43 +233,73 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
   }, [someFiltersAreSelected])
 
   return (
-    <div>
-      <form 
-        onSubmit={(event) => {
-          event.preventDefault()
-          searchData()
-        }
-      }>
-        <input 
-          id='search-box' 
-          type="textbox" 
-          placeholder="search" 
-          onChange={(event) => {
-            setSearchTextBox(event.target.value)
+    <>
+      <div className="SearchAndFilter">
+        <form 
+          onSubmit={(event) => {
+            event.preventDefault()
+            searchData()
+          }
+        }>
+          <input 
+            id='search-box' 
+            type="textbox" 
+            placeholder="search" 
+            value={searchTextBox}
+            onChange={(event) => {
+              console.log(event)
+              setSearchTextBox(event.target.value)
+              }}
+            />
+          <button 
+            className="cta-one"
+            type="submit"
+            disabled={searchTextBox==='' ? true : false}
+            >search</button>
+          <button 
+            className="cta-two"
+            // type="reset" 
+            disabled={searchTextBox==='' ? true : false}
+            onClick={() => {
+              setSearchTextBox('')
+              setFoundSearchIds(undefined)
             }}
-          />
-        <button 
-          type="submit"
-          disabled={searchTextBox==='' ? true : false}
-          >search</button>
-        <button 
-          type="reset" 
-          onClick={() => {
-            setSearchTextBox('')
-          }}
-        >
-          clear
-        </button>
-      </form>
-      {filterTypes &&
-        <>
-          {filterTypes.map(filter => createFilterOptions(filter))}
-          <button onClick={resetFilters}>Reset</button>
-        </>
+            >
+            clear
+          </button>
+        </form>
+        {filterTypes &&
+          <div className="filters">
+            {filterTypes.map(filter => createFilterOptions(filter))}
+            <button 
+              className="cta-two"
+              disabled={someFiltersAreSelected() ? false : true}
+              onClick={resetFilters}
+            >
+              reset
+            </button>
+          </div>
+        }
+        {userMessage &&
+          <div 
+            className={
+             `search-filter-message`
+            }>{userMessage}</div>
+        }
+      </div>
+      {(isSearching && loadingIcon) && 
+        <div className="searching-icon-container">
+          <img 
+            className="searching-icon" 
+            src={loadingIcon} 
+            alt="A transforming hamburger, pizza and sushi loading icon" />
+        </div>
       }
-      {determineListItems()}
-    </div>
+      {!isSearching &&
+        determineListItems()
+      }
+    </>
   )
 }
 
-export default SearchAndFilter
+export default SearchAndFilter  

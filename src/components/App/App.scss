@@ -1,0 +1,37 @@
+@import '../../variables.scss';
+
+body {
+  background-color: $background;
+  color: $text;
+}
+
+header {
+  display: flex;
+  justify-content: center;
+}
+
+h1 {
+  color: $accent-one;
+  margin-bottom: 0;
+}
+
+.loading-icon-container {
+  margin-top: 1em;
+  width: 100%;
+  height: min-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-icon {
+  width: 5em;
+  animation: fade-in 2s;
+}
+
+.error-message {
+  width: 100%;
+  text-align: center;
+  color: $error;
+  margin-top: 1em;
+}
