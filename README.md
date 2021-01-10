@@ -1,13 +1,6 @@
----
-title: Readme
-date: "2020-01-10"
-language: English
-creator: Greyson Elkins
----
-
 <br />
-<center>
-<p>
+<!-- <center> -->
+<p align="center">
   <a href="https://github.com/GreysonElkins/list-and-filter">
     <img src="./src/loading.gif" style="width:5em"/>
   </a>
