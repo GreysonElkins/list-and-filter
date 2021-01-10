@@ -202,15 +202,6 @@ These components are built with responsive layouts in mind:
 
 </center>
 
-<!-- ### Search for and message users:
- <img src="./public/images/search-message.gif" alt="Searching for and messaging a new user" />
-
-### Sign up as an applicant:
- <img src="./public/images/new-applicant.gif" alt="Creating a new profile" />
-
-### View your messages as an applicant:
- <img src="./public/images/view-messages.gif" alt="search-for-and-message-users" /> -->
-
 <!-- ROADMAP -->
 ## Roadmap
 
