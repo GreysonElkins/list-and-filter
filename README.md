@@ -4,7 +4,7 @@
   <a href="https://github.com/GreysonElkins/list-and-filter">
     <img src="./src/loading.gif" style="width:5em"/>
   </a>
-  <h1 style="color:#6cac44">Restaurant Locator</h1>
+  <div style="color:#6cac44">Restaurant Locator</div>
 </p>
 
 <p align="center">
