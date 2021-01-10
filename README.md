@@ -1,25 +1,26 @@
 <br />
 <!-- <center> -->
 <p align="center">
-  <p>
   <a href="https://github.com/GreysonElkins/list-and-filter">
     <img src="./src/loading.gif" style="width:5em"/>
   </a>
   <h1 style="color:#6cac44">Restaurant Locator</h1>
 </p>
 
+<p align="center">
+  
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 
-<p>
+</p>
+<p align="center">
   <!-- <a href="https://hire-up-turing.herokuapp.com/">View Deployed</a>
   · -->
   <a href="https://github.com/GreysonElkins/list-and-filter/issues">Report Bug</a>
   ·
   <a href="https://github.com/GreysonElkins/list-and-filter/issues">Request Feature</a>
-  </p>
 </p>
 ## Table of Contents
 
