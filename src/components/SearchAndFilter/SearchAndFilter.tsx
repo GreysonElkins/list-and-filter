@@ -13,7 +13,7 @@ const changeSelectedFilters = (state: object, filterUpdate:filterUpdate) => {
   }
 }
 
-const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes}) => {
+const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes, loadingIcon}) => {
   const [selectedFilterValues, dispatchFilters] = useReducer(changeSelectedFilters, {})
   const [foundFilterIds, setFoundFilterIds] = useState<Array<string> | undefined>(undefined)
   const [searchTextBox, setSearchTextBox] = useState<string>('')
@@ -21,6 +21,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
   const [queryResults, setQueryResults] = useState<Array<object>>([])
   const [userMessage, setUserMessage] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [isSearching, setIsSearching] = useState<boolean>(false)
   
   const saveFilterTypes = useCallback(() => {
     if(filterTypes) {
@@ -105,6 +106,7 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
     let result:Array<{id:string}> = []
     
     if (filterTypes && someFiltersAreSelected()) {
+      setIsSearching(true)
       filterTypes.forEach(filter => {
         if (selectedFilterValues[filter] !== 'All') {
           const dataToSearch = result.length > 0 ? result : allData
@@ -143,8 +145,9 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
 
   const searchData = () => {
     let result:any[] = [];
-
+    
     if (searchTextBox !== '') {
+      setIsSearching(true)
       result = allData.reduce((results:string[], item) => {
         let itemsValues:string[] = makeDataSearchFriendly(item)
         if (itemsValues.some(value => value.includes(searchTextBox.toUpperCase()))) {
@@ -203,8 +206,8 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
     } else if (foundFilterIds) {
       matchingResults = allData.filter(item => foundFilterIds.includes(item.id))
     }
-    setQueryResults(matchingResults)
-
+      setQueryResults(matchingResults)
+      setIsSearching(false)
   }, [allData, foundFilterIds, foundSearchIds])
 
   useEffect(() => {
@@ -284,7 +287,17 @@ const SearchAndFilter: React.FC<filterProps> = ({allData, columns, filterTypes})
             }>{userMessage}</div>
         }
       </div>
-      {determineListItems()}
+      {(isSearching && loadingIcon) && 
+        <div className="searching-icon-container">
+          <img 
+            className="searching-icon" 
+            src={loadingIcon} 
+            alt="A transforming hamburger, pizza and sushi loading icon" />
+        </div>
+      }
+      {!isSearching &&
+        determineListItems()
+      }
     </>
   )
 }

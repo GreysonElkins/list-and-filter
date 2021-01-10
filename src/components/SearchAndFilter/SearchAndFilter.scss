@@ -66,3 +66,25 @@
   border: solid 2px $accent-three;
   border-radius: 20px;
 }
+
+.searching-icon-container {
+  width: 100%;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.searching-icon {
+  width: 5em;
+  animation: fade-in 2s;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0%
+  }
+  to {
+    opacity: 100%
+  }
+}
