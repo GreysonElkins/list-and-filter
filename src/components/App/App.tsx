@@ -39,6 +39,7 @@ const App: React.FC = () => {
           allData={restaurants} 
           columns={['name', 'city', 'state', 'telephone', 'genre', 'website']}
           filterTypes={['state', 'genre']}
+          loadingIcon={loadingIcon}
           />
         {isLoading &&
           <img src={loadingIcon} alt="loading icon" />
