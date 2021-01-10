@@ -34,19 +34,21 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <header><h1>Restaurant Locator</h1></header>
+        {error &&
+          <div className="error-message">{error}</div>
+        }
       <main> 
+        {isLoading &&
+        <div className="loading-icon-container">
+          <img className="loading-icon" src={loadingIcon} alt="loading icon" />
+        </div>
+        }
         <SearchAndFilter 
           allData={restaurants} 
           columns={['name', 'city', 'state', 'telephone', 'genre', 'website']}
           filterTypes={['state', 'genre']}
           loadingIcon={loadingIcon}
           />
-        {isLoading &&
-          <img src={loadingIcon} alt="loading icon" />
-        }
-        {error &&
-          error
-        }
       </main>
     </div>
   );
