@@ -32,13 +32,14 @@ const createErrorMessage = (error: number): string => {
   }
 } 
 
-export const getRestaurants = (): Promise<string | restaurant[]> => {
+export const getRestaurants = (authKey:string): Promise<string | restaurant[]> => {
   return fetch(
     `https://code-challenge.spectrumtoolbox.com/api/restaurants`, 
     {
       method: 'GET',
       headers: {
-        "Authorization": ""
+        "content-type": "application/json",
+        "Authorization": `Api-Key ${process.env.REACT_APP_API_TOKEN}`
       }      
     })
     .then(response => {

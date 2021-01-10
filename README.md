@@ -95,7 +95,7 @@ getRestaurants()
     setIsLoading(false)
 })
 ```
-4. Place this code block in it's place
+4. Place this code block in it's place and add `import fakeData from './FakeData'` at the top of the document
 ```
 setRestaurants(fakeData)
 setIsLoading(false)
