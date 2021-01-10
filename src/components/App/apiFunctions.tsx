@@ -32,7 +32,7 @@ const createErrorMessage = (error: number): string => {
   }
 } 
 
-export const getRestaurants = (authKey:string): Promise<string | restaurant[]> => {
+export const getRestaurants = (): Promise<string | restaurant[]> => {
   return fetch(
     `https://code-challenge.spectrumtoolbox.com/api/restaurants`, 
     {

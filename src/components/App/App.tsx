@@ -14,7 +14,7 @@ const App: React.FC = () => {
   const [error, setError] = useState<string>('')
 
   useEffect(() => {
-      getRestaurants(process.env.REACT_APP_API_TOKEN!.toString())
+      getRestaurants()
         .then(restaurants => {
           if (Array.isArray(restaurants)) {
             setRestaurants(restaurants)
