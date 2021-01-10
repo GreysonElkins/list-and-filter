@@ -38,7 +38,8 @@ export const getRestaurants = (): Promise<string | restaurant[]> => {
     {
       method: 'GET',
       headers: {
-        "Authorization": ""
+        "content-type": "application/json",
+        "Authorization": `Api-Key ${process.env.REACT_APP_API_TOKEN}`
       }      
     })
     .then(response => {

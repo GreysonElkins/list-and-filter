@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react'
 import SearchAndFilter from '../SearchAndFilter/SearchAndFilter'
 import { restaurant }from './definitions'
 import { getRestaurants } from './apiFunctions'
-import fakeData from './FakeData'
 import loadingIcon from '../../loading.gif'
 
 import './App.scss';
@@ -15,20 +14,18 @@ const App: React.FC = () => {
   const [error, setError] = useState<string>('')
 
   useEffect(() => {
-      // getRestaurants()
-      //   .then(restaurants => {
-      //     if (Array.isArray(restaurants)) {
-      //       setRestaurants(restaurants)
-      //     } else {
-      //       setError(restaurants)
-      //       setIsLoading(false)
-      //     }
-      //   })
-      //   .then(() => {
-      //     setIsLoading(false)
-      // })
-      setRestaurants(fakeData)
-      setIsLoading(false)
+      getRestaurants()
+        .then(restaurants => {
+          if (Array.isArray(restaurants)) {
+            setRestaurants(restaurants)
+          } else {
+            setError(restaurants)
+            setIsLoading(false)
+          }
+        })
+        .then(() => {
+          setIsLoading(false)
+      })
   }, [isLoading])
 
   return (
