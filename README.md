@@ -10,8 +10,8 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 
-  <!-- <a href="https://hire-up-turing.herokuapp.com/">View Deployed</a>
-  · -->
+  <a href="restaurant-locator-3000.herokuapp.com">Site</a>
+  ·
   <a href="https://github.com/GreysonElkins/list-and-filter/issues">Report Bug</a>
   ·
   <a href="https://github.com/GreysonElkins/list-and-filter/issues">Request Feature</a>
