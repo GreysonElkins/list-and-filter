@@ -1,5 +1,3 @@
-<br />
-<!-- <center> -->
 <p align="center">
   <a href="https://github.com/GreysonElkins/list-and-filter">
     <img src="./src/loading.gif" width="150px"/>
@@ -189,12 +187,12 @@ These components are built with responsive layouts in mind:
 
 #### On a Phone:
 <center>
-  <img src="./public/readme-imgs/phone.png" alt= "the app on a phone" style="width:20em"/>
+  <img src="./public/readme-imgs/phone.png" alt= "the app on a phone" width="450px" />
 </center>
 
 #### On A Tablet: 
 <center>
-<img src="./public/readme-imgs/tablet.png" style="width:40em" alt= "the app on a tablet"/>
+<img src="./public/readme-imgs/tablet.png" width="800px" alt= "the app on a tablet"/>
 
 </center>
 
