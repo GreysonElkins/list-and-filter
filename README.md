@@ -10,7 +10,7 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 
-  <a href="restaurant-locator-3000.herokuapp.com">Site</a>
+  <a href="https://restaurant-locator-3000.herokuapp.com/">Site</a>
   ·
   <a href="https://github.com/GreysonElkins/list-and-filter/issues">Report Bug</a>
   ·
