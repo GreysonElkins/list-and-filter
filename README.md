@@ -2,9 +2,9 @@
 <!-- <center> -->
 <p align="center">
   <a href="https://github.com/GreysonElkins/list-and-filter">
-    <img src="./src/loading.gif" style="width:5em"/>
+    <img src="./src/loading.gif" width="5em"/>
   </a>
-  <div style="color:#6cac44">Restaurant Locator</div>
+  <h1 align="center" style="color:#6cac44">Restaurant Locator</h1>
 </p>
 
 <p align="center">
@@ -22,6 +22,7 @@
   ·
   <a href="https://github.com/GreysonElkins/list-and-filter/issues">Request Feature</a>
 </p>
+
 ## Table of Contents
 
 * [About the Project](#about-the-project)
