@@ -180,15 +180,11 @@ $error: #590e35;
 
 The user is able to combine multiple filters with a search input. If no results are found, the list will return to its full view and display a message to the user. (In this case, we see that a User searches for items in Massachusetts that contain the word "chef" and finds nothing, but when removing the state filter, "A Chef's Kitchen" in Vermont is shown.)
 
-<center>
-<img src="./public/readme-imgs/locator.gif" alt= "a brief demo of Restaurant Locator"/>
-</center>
+<img align="center" src="./public/readme-imgs/locator.gif" alt= "a brief demo of Restaurant Locator"/>
 These components are built with responsive layouts in mind: 
 
 #### On a Phone:
-<center>
-  <img src="./public/readme-imgs/phone.png" alt= "the app on a phone" width="450px" />
-</center>
+  <img align="center" src="./public/readme-imgs/phone.png" alt= "the app on a phone" width="450px" />
 
 #### On A Tablet: 
 <center>
