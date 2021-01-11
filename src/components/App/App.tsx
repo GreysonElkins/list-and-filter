@@ -40,12 +40,14 @@ const App: React.FC = () => {
           <img className="loading-icon" src={loadingIcon} alt="loading icon" />
         </div>
         }
-        <SearchAndFilter 
-          allData={restaurants} 
-          columns={['name', 'city', 'state', 'telephone', 'genre', 'website']}
-          filterTypes={['state', 'genre']}
-          loadingIcon={loadingIcon}
-          />
+        {!isLoading && !error && 
+          <SearchAndFilter 
+            allData={restaurants} 
+            columns={['name', 'city', 'state', 'telephone', 'genre', 'website']}
+            filterTypes={['state', 'genre']}
+            loadingIcon={loadingIcon}
+            />
+        }
       </main>
     </div>
   );
