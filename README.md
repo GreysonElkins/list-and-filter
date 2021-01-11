@@ -1,27 +1,21 @@
-<br />
-<!-- <center> -->
 <p align="center">
   <a href="https://github.com/GreysonElkins/list-and-filter">
-    <img src="./src/loading.gif" style="width:5em"/>
+    <img src="./src/loading.gif" width="150px"/>
   </a>
-  <div style="color:#6cac44">Restaurant Locator</div>
+  <h1 align="center" style="color:#6cac44">Restaurant Locator</h1>
 </p>
-
-<p align="center">
   
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 
-</p>
-<p align="center">
   <!-- <a href="https://hire-up-turing.herokuapp.com/">View Deployed</a>
   · -->
   <a href="https://github.com/GreysonElkins/list-and-filter/issues">Report Bug</a>
   ·
   <a href="https://github.com/GreysonElkins/list-and-filter/issues">Request Feature</a>
-</p>
+
 ## Table of Contents
 
 * [About the Project](#about-the-project)
@@ -181,19 +175,15 @@ $error: #590e35;
 
 The user is able to combine multiple filters with a search input. If no results are found, the list will return to its full view and display a message to the user. (In this case, we see that a User searches for items in Massachusetts that contain the word "chef" and finds nothing, but when removing the state filter, "A Chef's Kitchen" in Vermont is shown.)
 
-<center>
-<img src="./public/readme-imgs/locator.gif" alt= "a brief demo of Restaurant Locator"/>
-</center>
+<img align="center" src="./public/readme-imgs/locator.gif" alt= "a brief demo of Restaurant Locator"/>
 These components are built with responsive layouts in mind: 
 
 #### On a Phone:
-<center>
-  <img src="./public/readme-imgs/phone.png" alt= "the app on a phone" style="width:20em"/>
-</center>
+  <img align="center" src="./public/readme-imgs/phone.png" alt= "the app on a phone" width="450px" />
 
 #### On A Tablet: 
 <center>
-<img src="./public/readme-imgs/tablet.png" style="width:40em" alt= "the app on a tablet"/>
+<img src="./public/readme-imgs/tablet.png" width="800px" alt= "the app on a tablet"/>
 
 </center>
 
