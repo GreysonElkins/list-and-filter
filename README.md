@@ -2,7 +2,7 @@
 <!-- <center> -->
 <p align="center">
   <a href="https://github.com/GreysonElkins/list-and-filter">
-    <img src="./src/loading.gif" width="300px"/>
+    <img src="./src/loading.gif" width="150px"/>
   </a>
   <h1 align="center" style="color:#6cac44">Restaurant Locator</h1>
 </p>
